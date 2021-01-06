@@ -20,6 +20,8 @@ requirements:
     - {{ compiler('cxx') }}
     - {{ compiler('c') }}
     - {{ compiler('m2w64_fortran') }}
+  run:
+    - mpi 1.0 msmpi
 
 test:
   commands:
