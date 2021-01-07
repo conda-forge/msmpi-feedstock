@@ -1,7 +1,5 @@
 @echo on
 
-echo activate script is called
-
 :: Backup environment variables (only if the variables are set)
 if defined MSMPI_BIN (
     set "MSMPI_BIN_CONDA_BACKUP=%MSMPI_BIN%"
