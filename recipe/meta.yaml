@@ -12,7 +12,7 @@ source:
     - conda-build.patch
 
 build:
-  number: 0
+  number: 1
   skip: true  # [not win]
 
 requirements:
@@ -20,6 +20,8 @@ requirements:
     - {{ compiler('cxx') }}
     - {{ compiler('c') }}
     - {{ compiler('m2w64_fortran') }}
+  run:
+    - mpi 1.0 msmpi
 
 test:
   commands:
@@ -29,6 +31,9 @@ test:
     - if not exist %LIBRARY_INC%\\mpi.h exit 1  # [win]
     - if not exist %LIBRARY_LIB%\\msmpi.lib exit 1  # [win]
     - if not exist %LIBRARY_LIB%\\mpifort.lib exit 1  # [win]
+    - if not %MSMPI_BIN% == %LIBRARY_BIN% exit 1  # [win]
+    - if not %MSMPI_INC% == %LIBRARY_INC% exit 1  # [win]
+    - if not %MSMPI_LIB64% == %LIBRARY_LIB% exit 1  # [win]
 
 about:
   home: https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi

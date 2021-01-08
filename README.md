@@ -5,9 +5,13 @@ Home: https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi
 
 Package license: MIT
 
-Feedstock license: BSD-3-Clause
+Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/msmpi-feedstock/blob/master/LICENSE.txt)
 
 Summary: Microsoft message-passing-interface (MS-MPI)
+
+Development: https://github.com/microsoft/Microsoft-MPI
+
+Documentation: https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi
 
 Microsoft MPI (MS-MPI) is a Microsoft implementation of the Message Passing Interface standard for developing and running parallel applications on the Windows platform.
 

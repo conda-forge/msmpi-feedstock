@@ -19,4 +19,13 @@ if "%ARCH%"=="32" (
     copy %SRC_DIR%\out\Release-x64\bin\sdk\inc\x64\mpifptr.h %LIBRARY_INC%\mpifptr.h
 )
 
+setlocal EnableDelayedExpansion
+
+:: Copy the [de]activate scripts to %PREFIX%\etc\conda\[de]activate.d.
+:: This will allow them to be run on environment activation.
+for %%F in (activate deactivate) DO (
+    if not exist %PREFIX%\etc\conda\%%F.d mkdir %PREFIX%\etc\conda\%%F.d
+    copy %RECIPE_DIR%\%%F.bat %PREFIX%\etc\conda\%%F.d\%PKG_NAME%_%%F.bat
+)
+
 dir /s /b
