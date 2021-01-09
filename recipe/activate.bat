@@ -1,4 +1,6 @@
-@echo on
+if defined CONDA_BUILD_STATE (
+    @echo on
+)
 
 :: Backup environment variables (only if the variables are set)
 if defined MSMPI_BIN (
