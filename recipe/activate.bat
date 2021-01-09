@@ -1,4 +1,6 @@
-@echo on
+if defined CONDA_BUILD_STATE (
+    @echo on
+)
 
 :: Backup environment variables (only if the variables are set)
 if defined MSMPI_BIN (
@@ -10,7 +12,11 @@ if defined MSMPI_INC (
 if defined MSMPI_LIB64 (
     set "MSMPI_LIB64_CONDA_BACKUP=%MSMPI_LIB64%"
 )
+if defined MSMPI_LIB32 (
+    set "MSMPI_LIB32_CONDA_BACKUP=%MSMPI_LIB32%"
+)
 
 set MSMPI_BIN=%LIBRARY_BIN%
 set MSMPI_INC=%LIBRARY_INC%
 set MSMPI_LIB64=%LIBRARY_LIB%
+set MSMPI_LIB32=""

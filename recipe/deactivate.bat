@@ -18,3 +18,8 @@ if not "%MSMPI_LIB64_CONDA_BACKUP%"=="" (
 ) else (
     set "MSMPI_LIB64="
 )
+
+if not "%MSMPI_LIB32_CONDA_BACKUP%"=="" (
+    set "MSMPI_LIB32=%MSMPI_LIB32_CONDA_BACKUP%"
+    set "MSMPI_LIB32_CONDA_BACKUP="
+)
