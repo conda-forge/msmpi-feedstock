@@ -2,20 +2,29 @@ if not exist %LIBRARY_BIN% mkdir %LIBRARY_BIN% || exit 1
 if not exist %LIBRARY_LIB% mkdir %LIBRARY_LIB% || exit 1
 if not exist %LIBRARY_INC% mkdir %LIBRARY_INC% || exit 1
 
+echo "check x64..."
 dir /s /b "C:\Program Files\Microsoft MPI"
+echo "check x86..."
 dir /s /b "C:\Program Files (x86)\Microsoft SDKs\MPI\"
 
 mkdir yyyyy
 dir /s /b "%cd%\yyyyy"
 echo "Installing MS-MPI SDK..." 
-msiexec.exe /quiet /qn /i msmpisdk.msi TARGETDIR="%cd%\yyyyy" || exit 1
+msiexec.exe /quiet /qn /a msmpisdk.msi TARGETDIR="%cd%\yyyyy" || exit 1
 
+echo "check pwd..."
 dir /s /b
+echo "check target dir..."
 dir /s /b "%cd%\yyyyy"
+
+echo "check x64..."
+dir /s /b "C:\Program Files\Microsoft MPI"
+echo "check x86..."
+dir /s /b "C:\Program Files (x86)\Microsoft SDKs\MPI\"
 
 mkdir xxxxx
 echo "Installing MS-MPI Runtime..." 
-msmpisetup.exe -unattend -installroot %cd%\xxxxx -verbose || exit 1
+msmpisetup.exe -unattend -installroot "%cd%\xxxxx" -verbose || exit 1
 
 dir /s /b xxxxx
 
