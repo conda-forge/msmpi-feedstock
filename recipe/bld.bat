@@ -2,13 +2,20 @@ if not exist %LIBRARY_BIN% mkdir %LIBRARY_BIN% || exit 1
 if not exist %LIBRARY_LIB% mkdir %LIBRARY_LIB% || exit 1
 if not exist %LIBRARY_INC% mkdir %LIBRARY_INC% || exit 1
 
-start "Install MS-MPI SDK" /wait msiexec.exe /quiet /qn /i msmpisdk.msi || exit 1
-
-dir /s /b
+dir /s /b "C:\Program Files\Microsoft MPI"
 dir /s /b "C:\Program Files (x86)\Microsoft SDKs\MPI\"
 
+mkdir yyyyy
+dir /s /b "%cd%\yyyyy"
+echo "Installing MS-MPI SDK..." 
+msiexec.exe /quiet /qn /i msmpisdk.msi TARGETDIR="%cd%\yyyyy" || exit 1
+
+dir /s /b
+dir /s /b "%cd%\yyyyy"
+
 mkdir xxxxx
-start "Install MS-MPI Runtime" /wait msmpisetup.exe -unattend -installroot %cd%\xxxxx -verbose
+echo "Installing MS-MPI Runtime..." 
+msmpisetup.exe -unattend -installroot %cd%\xxxxx -verbose || exit 1
 
 dir /s /b xxxxx
 
