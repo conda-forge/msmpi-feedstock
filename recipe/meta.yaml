@@ -1,18 +1,23 @@
 {% set name = "msmpi" %}
-{% set version = "10.1.1" %}
+{% set version = "10.1.2" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://github.com/microsoft/Microsoft-MPI/archive/v{{ version }}.tar.gz
-  sha256: 63c7da941fc4ffb05a0f97bd54a67968c71f63389a0d162d3182eabba1beab3d
-  patches:
-    - conda-build.patch
+  # See https://github.com/mpi4py/mpi4py/blob/master/.azure/install-msmpi.ps1
+
+  # This is the MS-MPI SDK
+  url: http://download.microsoft.com/download/a/5/2/a5207ca5-1203-491a-8fb8-906fd68ae623/msmpisdk.msi
+  sha256: d8c07fc079d35d373e14a6894288366b74147539096d43852cb0bbae32b33e44
+
+  # This is the MS-MPI Runtime
+  url: http://download.microsoft.com/download/a/5/2/a5207ca5-1203-491a-8fb8-906fd68ae623/msmpisetup.exe
+  sha256: c305ce3f05d142d519f8dd800d83a4b894fc31bcad30512cefb557feaccbe8b4
 
 build:
-  number: 2
+  number: 0
   skip: true  # [not win]
 
 requirements:
@@ -47,3 +52,4 @@ about:
 extra:
   recipe-maintainers:
     - RyanMcCarthy-NOAA
+    - leofang
