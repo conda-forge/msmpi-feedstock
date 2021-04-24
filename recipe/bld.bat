@@ -26,9 +26,10 @@ mkdir xxxxx
 echo "Installing MS-MPI Runtime..."
 :: msmpisetup.exe /s /x /b"%cd%\xxxxx" /v"/qn" || exit 1
 :: msmpisetup.exe -unattend -force
-"%cd%\msmpisetup.exe" -unattend -force -full -installroot "%cd%\xxxxx" -verbose -log "%cd%\log.txt" || exit 1
-echo "printing log..."
-type "%cd%\log.txt"
+:: "%cd%\msmpisetup.exe" -unattend -force -full -installroot "%cd%\xxxxx" -verbose -log "%cd%\log.txt" || exit 1
+7z x msmpisetup.exe -o"%cd\xxxxx"
+:: echo "printing log..."
+:: type "%cd%\log.txt"
 
 echo "checking installroot..."
 dir /s /b "%cd%\xxxxx"
