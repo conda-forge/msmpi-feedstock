@@ -1,6 +1,9 @@
 if not exist %LIBRARY_BIN% mkdir %LIBRARY_BIN% || exit 1
 if not exist %LIBRARY_LIB% mkdir %LIBRARY_LIB% || exit 1
+if not exist "%LIBRARY_LIB%\x64" mkdir "%LIBRARY_LIB%\x64" || exit 1
 if not exist %LIBRARY_INC% mkdir %LIBRARY_INC% || exit 1
+if not exist "%LIBRARY_INC%\x64" mkdir "%LIBRARY_INC%\x64" || exit 1
+
 
 :: echo "check x64..."
 :: dir /s /b "C:\Program Files\Microsoft MPI"
@@ -16,16 +19,14 @@ echo "Installing MS-MPI SDK..."
 msiexec.exe /quiet /qn /a "%cd%\msmpisdk.msi" TARGETDIR="%cd%\temp" || exit 1
 
 echo "moving files..."
-move "%cd%\temp\PFiles\Microsoft SDKs\MPI\Lib\*.lib" %LIBRARY_LIB% || exit 1
+move "%cd%\temp\PFiles\Microsoft SDKs\MPI\Lib\x64\*.lib" "%LIBRARY_LIB%\x64" || exit 1
 echo "moving files..."
 move "%cd%\temp\PFiles\Microsoft SDKs\MPI\Include\*.h" %LIBRARY_INC% || exit 1
 echo "moving files..."
 move "%cd%\temp\PFiles\Microsoft SDKs\MPI\Include\*.f90" %LIBRARY_INC% || exit 1
-echo "making new folder..."
-mkdir %LIBRARY_INC%\x64 || exit 1
 echo "moving files..."
-move "%cd%\temp\PFiles\Microsoft SDKs\MPI\Include\x64\*.h" %LIBRARY_INC%\x64 || exit 1
-echo "moving files..."
+move "%cd%\temp\PFiles\Microsoft SDKs\MPI\Include\x64\*.h" "%LIBRARY_INC%\x64" || exit 1
+echo "moving files...
 move "%cd%\temp\PFiles\Microsoft SDKs\MPI\License\*" "%cd%\License" || exit 1
 
 echo "check pwd..."
