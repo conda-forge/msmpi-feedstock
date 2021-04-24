@@ -10,7 +10,7 @@ dir /s /b "C:\Program Files (x86)\Microsoft SDKs\MPI\"
 mkdir yyyyy
 dir /s /b "%cd%\yyyyy"
 echo "Installing MS-MPI SDK..." 
-msiexec.exe /quiet /qn /a msmpisdk.msi TARGETDIR="%cd%\yyyyy" || exit 1
+msiexec.exe /quiet /qn /a "%cd%\msmpisdk.msi" TARGETDIR="%cd%\yyyyy" || exit 1
 
 echo "check pwd..."
 dir /s /b
@@ -26,7 +26,7 @@ mkdir xxxxx
 echo "Installing MS-MPI Runtime..."
 :: msmpisetup.exe /s /x /b"%cd%\xxxxx" /v"/qn" || exit 1
 :: msmpisetup.exe -unattend -force
-msmpisetup.exe -unattend -force -full -installroot %cd%\xxxxx -verbose -log "%cd%\log.txt" || exit 1
+"%cd%\msmpisetup.exe" -unattend -force -full -installroot "%cd%\xxxxx" -verbose -log "%cd%\log.txt" || exit 1
 echo "printing log..."
 type "%cd%\log.txt"
 
