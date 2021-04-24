@@ -25,11 +25,11 @@ dir /s /b "C:\Program Files (x86)\Microsoft SDKs\MPI\"
 mkdir xxxxx
 echo "Installing MS-MPI Runtime..."
 :: msmpisetup.exe /s /x /b"%cd%\xxxxx" /v"/qn" || exit 1
-msmpisetup.exe -unattend -force
-:: msmpisetup.exe -unattend -force -installroot "%cd%\xxxxx" -verbose || exit 1
+:: msmpisetup.exe -unattend -force
+msmpisetup.exe -unattend -force -installroot "%cd%\xxxxx" -verbose || exit 1
 
 echo "checking installroot..."
-dir /s /b xxxxx
+dir /s /b "%cd%\xxxxx"
 
 echo "DONE!"
 exit 1
