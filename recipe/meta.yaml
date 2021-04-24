@@ -25,6 +25,8 @@ requirements:
     - {{ compiler('cxx') }}
     - {{ compiler('c') }}
     - {{ compiler('m2w64_fortran') }}
+  host:
+    - 7zip
   run:
     - mpi 1.0 msmpi
 
