@@ -13,7 +13,10 @@ Development: https://github.com/microsoft/Microsoft-MPI
 
 Documentation: https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi
 
-Microsoft MPI (MS-MPI) is a Microsoft implementation of the Message Passing Interface standard for developing and running parallel applications on the Windows platform.
+Microsoft MPI (MS-MPI) is a Microsoft implementation of the Message Passing
+Interface standard for developing and running parallel applications on the
+Windows platform.
+
 
 Current build status
 ====================

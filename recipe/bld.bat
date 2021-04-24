@@ -1,9 +1,10 @@
+setlocal EnableDelayedExpansion
+
 if not exist %LIBRARY_BIN% mkdir %LIBRARY_BIN% || exit 1
 if not exist %LIBRARY_LIB% mkdir %LIBRARY_LIB% || exit 1
 if not exist "%LIBRARY_LIB%\x64" mkdir "%LIBRARY_LIB%\x64" || exit 1
 if not exist %LIBRARY_INC% mkdir %LIBRARY_INC% || exit 1
 if not exist "%LIBRARY_INC%\x64" mkdir "%LIBRARY_INC%\x64" || exit 1
-
 
 :: echo "check x64..."
 :: dir /s /b "C:\Program Files\Microsoft MPI"
@@ -18,15 +19,10 @@ mkdir License
 echo "Installing MS-MPI SDK..." 
 msiexec.exe /quiet /qn /a "%cd%\msmpisdk.msi" TARGETDIR="%cd%\temp" || exit 1
 
-echo "moving files..."
 move "%cd%\temp\PFiles\Microsoft SDKs\MPI\Lib\x64\*.lib" "%LIBRARY_LIB%\x64" || exit 1
-echo "moving files..."
 move "%cd%\temp\PFiles\Microsoft SDKs\MPI\Include\*.h" %LIBRARY_INC% || exit 1
-echo "moving files..."
 move "%cd%\temp\PFiles\Microsoft SDKs\MPI\Include\*.f90" %LIBRARY_INC% || exit 1
-echo "moving files..."
 move "%cd%\temp\PFiles\Microsoft SDKs\MPI\Include\x64\*.h" "%LIBRARY_INC%\x64" || exit 1
-echo "moving files...
 move "%cd%\temp\PFiles\Microsoft SDKs\MPI\License\*" "%cd%\License" || exit 1
 
 echo "check pwd..."
@@ -66,7 +62,6 @@ echo "checking test..."
 dir /s /b "%cd%\test"
 
 echo "DONE!"
-exit 1
 
 :: if "%ARCH%"=="32" (
 ::     set PLATFORM=Win32
@@ -89,8 +84,6 @@ exit 1
 ::     copy %SRC_DIR%\out\Release-x64\bin\sdk\inc\x64\mpifptr.h %LIBRARY_INC%\mpifptr.h
 :: )
  
-setlocal EnableDelayedExpansion
-
 echo "copy the [de]activate scripts..."
 for %%F in (activate deactivate) DO (
     if not exist %PREFIX%\etc\conda\%%F.d mkdir %PREFIX%\etc\conda\%%F.d

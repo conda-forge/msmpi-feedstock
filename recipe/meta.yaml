@@ -46,9 +46,16 @@ test:
 about:
   home: https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi
   license: MIT
-  license_file: LICENSE.txt
+  license_file:
+    - License\MicrosoftMPI-SDK-EULA.rtf
+    - License\MicrosoftMPI_Redistributable_EULA.rtf
+    - License\MPI-SDK-TPN.txt
+    - License\MPI_Redistributables_TPN.txt
   summary: Microsoft message-passing-interface (MS-MPI)
-  description: Microsoft MPI (MS-MPI) is a Microsoft implementation of the Message Passing Interface standard for developing and running parallel applications on the Windows platform.
+  description: |
+    Microsoft MPI (MS-MPI) is a Microsoft implementation of the Message Passing
+    Interface standard for developing and running parallel applications on the
+    Windows platform.
   doc_url: https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi
   dev_url: https://github.com/microsoft/Microsoft-MPI
 
