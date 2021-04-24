@@ -2,37 +2,58 @@ if not exist %LIBRARY_BIN% mkdir %LIBRARY_BIN% || exit 1
 if not exist %LIBRARY_LIB% mkdir %LIBRARY_LIB% || exit 1
 if not exist %LIBRARY_INC% mkdir %LIBRARY_INC% || exit 1
 
-echo "check x64..."
-dir /s /b "C:\Program Files\Microsoft MPI"
-echo "check x86..."
-dir /s /b "C:\Program Files (x86)\Microsoft SDKs\MPI\"
+:: echo "check x64..."
+:: dir /s /b "C:\Program Files\Microsoft MPI"
+:: echo "check x86..."
+:: dir /s /b "C:\Program Files (x86)\Microsoft SDKs\MPI\"
 
-mkdir yyyyy
-dir /s /b "%cd%\yyyyy"
+mkdir temp
+mkdir License
 echo "Installing MS-MPI SDK..." 
-msiexec.exe /quiet /qn /a "%cd%\msmpisdk.msi" TARGETDIR="%cd%\yyyyy" || exit 1
+msiexec.exe /quiet /qn /a "%cd%\msmpisdk.msi" TARGETDIR="%cd%\temp" || exit 1
+
+move "%cd%\temp\PFiles\Microsoft SDKs\MPI\Lib\*.lib" %LIBRARY_LIB% || exit 1
+move "%cd%\temp\PFiles\Microsoft SDKs\MPI\Include\*.h" %LIBRARY_INC% || exit 1
+move "%cd%\temp\PFiles\Microsoft SDKs\MPI\Include\*.f90" %LIBRARY_INC% || exit 1
+mkdir %LIBRARY_INC%\x64 || exit 1
+move "%cd%\temp\PFiles\Microsoft SDKs\MPI\Include\x64\*.h" %LIBRARY_INC%\x64 || exit 1
+move "%cd%\temp\PFiles\Microsoft SDKs\MPI\License\*" "%cd%\License" || exit 1
 
 echo "check pwd..."
 dir /s /b
 echo "check target dir..."
-dir /s /b "%cd%\yyyyy"
+dir /s /b "%cd%\temp"
+rmdir /q /s temp || exit 1
 
-echo "check x64..."
-dir /s /b "C:\Program Files\Microsoft MPI"
-echo "check x86..."
-dir /s /b "C:\Program Files (x86)\Microsoft SDKs\MPI\"
+:: echo "check x64..."
+:: dir /s /b "C:\Program Files\Microsoft MPI"
+:: echo "check x86..."
+:: dir /s /b "C:\Program Files (x86)\Microsoft SDKs\MPI\"
 
-mkdir xxxxx
+mkdir temp
+mkdir test
 echo "Installing MS-MPI Runtime..."
-:: msmpisetup.exe /s /x /b"%cd%\xxxxx" /v"/qn" || exit 1
-:: msmpisetup.exe -unattend -force
-:: "%cd%\msmpisetup.exe" -unattend -force -full -installroot "%cd%\xxxxx" -verbose -log "%cd%\log.txt" || exit 1
-7z x msmpisetup.exe -o"%cd%\xxxxx"
+:: this does not work because it keeps installing to C:\Program Files\Microsoft MPI\ ...
+:: "%cd%\msmpisetup.exe" -unattend -force -full -installroot "%cd%\temp" -verbose -log "%cd%\log.txt" || exit 1
 :: echo "printing log..."
 :: type "%cd%\log.txt"
+7z x msmpisetup.exe -o"%cd%\temp" || exit 1
+
+move "%cd%\temp\*.dll" %LIBRARY_BIN% || exit 1
+move "%cd%\temp\mpiexec.exe" %LIBRARY_BIN% || exit 1
+move "%cd%\temp\mpitrace.man" %LIBRARY_BIN% || exit 1
+move "%cd%\temp\msmpilaunchsvc.exe" %LIBRARY_BIN% || exit 1
+move "%cd%\temp\smpd.exe" %LIBRARY_BIN% || exit 1
+move "%cd%\temp\*.exe" "%cd%\test" || exit 1
+move "%cd%\temp\*" "%cd%\License" || exit 1
 
 echo "checking installroot..."
-dir /s /b "%cd%\xxxxx"
+dir /s /b "%cd%\temp"
+rmdir "%cd%\temp" || exit 1
+echo "checking License..."
+dir /s /b "%cd%\License"
+echo "checking test..."
+dir /s /b "%cd%\test"
 
 echo "DONE!"
 exit 1
@@ -60,8 +81,7 @@ exit 1
  
 setlocal EnableDelayedExpansion
 
-:: Copy the [de]activate scripts to %PREFIX%\etc\conda\[de]activate.d.
-:: This will allow them to be run on environment activation.
+echo "copy the [de]activate scripts..."
 for %%F in (activate deactivate) DO (
     if not exist %PREFIX%\etc\conda\%%F.d mkdir %PREFIX%\etc\conda\%%F.d
     copy %RECIPE_DIR%\%%F.bat %PREFIX%\etc\conda\%%F.d\%PKG_NAME%_%%F.bat
