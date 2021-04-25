@@ -42,6 +42,7 @@ test:
     - {{ compiler('c') }}
     - python
     - pip
+    - cython
     - git
   commands:
     # simple package integraty check
