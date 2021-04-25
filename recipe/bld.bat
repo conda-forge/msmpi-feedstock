@@ -66,5 +66,9 @@ for %%F in (activate deactivate) DO (
     copy %RECIPE_DIR%\%%F.bat %PREFIX%\etc\conda\%%F.d\%PKG_NAME%_%%F.bat || exit 1
 )
 
+echo "patching mpi.h..."
+patch "%LIBRARY_INC%\mpi.h" MSMPI_VER.diff || exit 1
+
+echo "checking source dir..."
 dir /s /b
 echo "DONE!"

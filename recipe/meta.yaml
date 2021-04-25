@@ -30,6 +30,7 @@ requirements:
     - {{ compiler('cxx') }}
     - {{ compiler('c') }}
     - {{ compiler('m2w64_fortran') }}
+    - m2-patch
   host:
     - 7zip
   run:
@@ -38,6 +39,7 @@ requirements:
 test:
   source_files:
     - Tests/*.exe  # [win]
+    - get_mpi_ver.c  # [win]
   requires:
     - {{ compiler('c') }}
     - python
@@ -62,14 +64,19 @@ test:
     - mpiexec.exe -d 3 -n 2 Tests\\MpiPingpong.exe -m  # [win]
     - mpiexec.exe -d 3 -n 2 Tests\\IMB_MPI1.exe PingPong PingPing PingPongAnySource PingPingAnySource Sendrecv Allreduce -off_cache -1 -msglog 10  # [win]
 
-    # test compiling + linking + execution; also check if MSMPI_VER is patched correctly
-    - git clone https://github.com/mpi4py/mpi4py.git
-    - cd mpi4py
-    - pip install --no-build-isolation --no-deps -v .
-    - cd ..
-    - python -c "from mpi4py import MPI; print(MPI.Get_library_version())"
-    - mpiexec -n 2 python -m mpi4py.bench helloworld
-    - mpiexec -n 2 python -m mpi4py.bench ringtest
+    # This works! Just comment out to save time while I'm testing other things
+    ## test compiling + linking + execution
+    #- git clone https://github.com/mpi4py/mpi4py.git
+    #- cd mpi4py
+    #- pip install --no-build-isolation --no-deps -v .
+    #- cd ..
+    #- python -c "from mpi4py import MPI; print(MPI.Get_library_version())"
+    #- mpiexec -n 2 python -m mpi4py.bench helloworld
+    #- mpiexec -n 2 python -m mpi4py.bench ringtest
+
+    # check if MSMPI_VER is correctly patched
+    - cl.exe -I%LIBRARY_INC% -L%LIBRARY_LIB% get_mpi_ver.c
+    - get_mpi_ver
 
 about:
   home: https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi
