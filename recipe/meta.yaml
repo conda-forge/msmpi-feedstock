@@ -40,7 +40,10 @@ test:
     - Tests/*.exe  # [win]
   requires:
     - {{ compiler('c') }}
+    - python
+    - git
   commands:
+    # simple package integraty check
     - if not exist %LIBRARY_BIN%\\mpiexec.exe exit 1  # [win]
     - if not exist %LIBRARY_BIN%\\msmpi.dll exit 1  # [win]
     - if not exist %LIBRARY_INC%\\mpi.f90 exit 1  # [win]
@@ -49,11 +52,20 @@ test:
     - if not %MSMPI_BIN% == %LIBRARY_BIN% exit 1  # [win]
     - if not %MSMPI_INC% == %LIBRARY_INC% exit 1  # [win]
     - if not %MSMPI_LIB64% == %LIBRARY_LIB% exit 1  # [win]
+
+    # check if binaries work ok
     - where mpiexec.exe  # [win]
     - where smpd.exe  # [win]
     - mpiexec.exe -d 3 -n 2 Tests\\MpiPingpong.exe -m  # [win]
     - mpiexec.exe -d 3 -n 2 Tests\\IMB_MPI1.exe PingPong PingPing PingPongAnySource PingPingAnySource Sendrecv Allreduce -off_cache -1 -msglog 10  # [win]
-    # TODO(leofang): add compilation tests, at least test compiling and running mpi4py
+
+    # test compiling + linking + execution; also check if MSMPI_VER is patched correctly
+    - git clone https://github.com/mpi4py/mpi4py.git
+    - cd mpi4py
+    - {{ PYTHON }} -m pip install --no-deps . -vv
+    - python -c "from mpi4py import MPI; print(MPI.Get_library_version())"
+    - mpiexec -n 2 python -m mpi4py.bench helloworld
+    - mpiexec -n 2 python -m mpi4py.bench ringtest
 
 about:
   home: https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi
