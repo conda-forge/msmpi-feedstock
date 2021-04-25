@@ -82,7 +82,7 @@ test:
 
     # check compiling & running simple C code
     # TODO(leofang): add C++ & Fortran tests?
-    - cl.exe -I%LIBRARY_INC% Tests\\helloworld.c /link /LIBPATH:"%LIBRARY_LIB%" /Fe"%cd%\helloworld.exe"
+    - cl.exe -I%LIBRARY_INC% Tests\\helloworld.c /Fe"%cd%\helloworld.exe" /link /LIBPATH:"%LIBRARY_LIB%" msmpi.lib
     - mpiexec -n 4 helloworld.exe
 
 about:
