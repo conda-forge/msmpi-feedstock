@@ -52,7 +52,7 @@ test:
     - where mpiexec.exe  # [win]
     - where smpd.exe  # [win]
     - mpiexec.exe -d 3 -n 2 Tests\\MpiPingpong.exe -m  # [win]
-    - mpiexec.exe -d 3 -n 2 Tests\\IMB_MPI1.exe PingPong PingPing PingPongAnySource PingPingAnySource Sendrecv Allreduce -off_cache -1 -msglog 6  # [win]
+    - mpiexec.exe -d 3 -n 2 Tests\\IMB_MPI1.exe PingPong PingPing PingPongAnySource PingPingAnySource Sendrecv Allreduce -off_cache -1 -msglog 10  # [win]
     # TODO(leofang): add compilation tests, at least test compiling and running mpi4py
 
 about:

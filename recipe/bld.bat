@@ -4,17 +4,13 @@ if not exist %LIBRARY_BIN% mkdir %LIBRARY_BIN% || exit 1
 if not exist %LIBRARY_LIB% mkdir %LIBRARY_LIB% || exit 1
 if not exist %LIBRARY_INC% mkdir %LIBRARY_INC% || exit 1
 
-:: echo "check x64..."
-:: dir /s /b "C:\Program Files\Microsoft MPI"
-:: echo "check x86..."
-:: dir /s /b "C:\Program Files (x86)\Microsoft SDKs\MPI\"
-
 echo "check pwd..."
 dir /s /b
 
 mkdir temp
 mkdir License
-echo "Installing MS-MPI SDK..." 
+echo "Installing MS-MPI SDK..."
+:: note: it has to be /a, not /i
 msiexec.exe /quiet /qn /a "%cd%\msmpisdk.msi" TARGETDIR="%cd%\temp" || exit 1
 
 move "%cd%\temp\PFiles\Microsoft SDKs\MPI\Lib\x64\*.lib" %LIBRARY_LIB% || exit 1
@@ -29,19 +25,14 @@ echo "check target dir..."
 dir /s /b "%cd%\temp"
 rmdir /q /s temp || exit 1
 
-:: echo "check x64..."
-:: dir /s /b "C:\Program Files\Microsoft MPI"
-:: echo "check x86..."
-:: dir /s /b "C:\Program Files (x86)\Microsoft SDKs\MPI\"
-
 mkdir temp
 mkdir Tests
 echo "Installing MS-MPI Runtime..."
-:: this does not work because it keeps installing to C:\Program Files\Microsoft MPI\, not to our custom path;
-:: however, we need this to overwrite the vm image's built-in installation so that we can run tests
+:: this does not work because it insists on installing to C:\Program Files\Microsoft MPI\, not to our custom path;
+:: however, we still need this to overwrite the vm image's built-in installation so that we can run tests
 "%cd%\msmpisetup.exe" -unattend -force -full -installroot "%cd%\temp" -verbose -log "%cd%\log.txt" || exit 1
 echo "printing log..."
-type "%cd%\log.txt"
+type "%cd%\log.txt" || exit 1
 :: this extraction does the real work for the purpose of packaging
 7z x msmpisetup.exe -o"%cd%\temp" || exit 1
 
@@ -56,38 +47,17 @@ move "%cd%\temp\*" "%cd%\License" || exit 1
 echo "checking installroot..."
 dir /s /b "%cd%\temp"
 rmdir "%cd%\temp" || exit 1
+:: note: conda-build would copy the two folders below for us
 echo "checking License..."
 dir /s /b "%cd%\License"
 echo "checking Tests..."
 dir /s /b "%cd%\Tests"
 
-echo "DONE!"
-
-:: if "%ARCH%"=="32" (
-::     set PLATFORM=Win32
-:: ) else (
-::     set PLATFORM=x64
-:: )
-:: 
-:: msbuild.exe /p:Platform=%PLATFORM% /p:Configuration=Release
-:: 
-:: for /r %SRC_DIR%\out\Release-%PLATFORM% %%f in (*.exe) do @copy "%%f" %LIBRARY_BIN%
-:: for /r %SRC_DIR%\out\Release-%PLATFORM% %%f in (*.dll) do @copy "%%f" %LIBRARY_BIN%
-:: for /r %SRC_DIR%\out\Release-%PLATFORM% %%f in (*.lib) do @copy "%%f" %LIBRARY_LIB%
-:: for /r %SRC_DIR%\out\Release-%PLATFORM% %%f in (*.f90) do @copy "%%f" %LIBRARY_INC%
-:: for /r %SRC_DIR%\out\Release-%PLATFORM% %%f in (*.h) do @copy "%%f" %LIBRARY_INC%
-:: 
-:: rem ensure the correct header for the platform is added 
-:: if "%ARCH%"=="32" (
-::     copy %SRC_DIR%\out\Release-x64\bin\sdk\inc\x86\mpifptr.h %LIBRARY_INC%\mpifptr.h
-:: ) else (
-::     copy %SRC_DIR%\out\Release-x64\bin\sdk\inc\x64\mpifptr.h %LIBRARY_INC%\mpifptr.h
-:: )
- 
 echo "copy the [de]activate scripts..."
 for %%F in (activate deactivate) DO (
     if not exist %PREFIX%\etc\conda\%%F.d mkdir %PREFIX%\etc\conda\%%F.d
-    copy %RECIPE_DIR%\%%F.bat %PREFIX%\etc\conda\%%F.d\%PKG_NAME%_%%F.bat
+    copy %RECIPE_DIR%\%%F.bat %PREFIX%\etc\conda\%%F.d\%PKG_NAME%_%%F.bat || exit 1
 )
 
 dir /s /b
+echo "DONE!"
