@@ -13,7 +13,7 @@ if not exist %LIBRARY_INC% mkdir %LIBRARY_INC% || exit 1
 :: wmic product where name="Microsoft MPI (7.1.12437.25)" call uninstall || exit 1
 
 echo "check registry..."
-REG QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MPI" || exit 1
+REG QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\HPC" || exit 1
 exit 1
 
 echo "check pwd..."
