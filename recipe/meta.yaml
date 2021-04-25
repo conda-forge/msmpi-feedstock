@@ -36,6 +36,10 @@ requirements:
     - mpi 1.0 msmpi
 
 test:
+  source_files:
+    - Tests\\*.exe  # [win]
+  requires:
+    - {{ compiler('c') }}
   commands:
     - if not exist %LIBRARY_BIN%\\mpiexec.exe exit 1  # [win]
     - if not exist %LIBRARY_BIN%\\msmpi.dll exit 1  # [win]
@@ -45,6 +49,9 @@ test:
     - if not %MSMPI_BIN% == %LIBRARY_BIN% exit 1  # [win]
     - if not %MSMPI_INC% == %LIBRARY_INC% exit 1  # [win]
     - if not %MSMPI_LIB64% == %LIBRARY_LIB% exit 1  # [win]
+    - where mpiexec.exe  # [win]
+    - where smpd.exe  # [win]
+    - mpiexec.exe -n 2 mpipingpong.exe -m  # [win]
 
 about:
   home: https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi

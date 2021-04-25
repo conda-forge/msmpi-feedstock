@@ -35,7 +35,7 @@ rmdir /q /s temp || exit 1
 :: dir /s /b "C:\Program Files (x86)\Microsoft SDKs\MPI\"
 
 mkdir temp
-mkdir test
+mkdir Tests
 echo "Installing MS-MPI Runtime..."
 :: this does not work because it keeps installing to C:\Program Files\Microsoft MPI\ ...
 :: "%cd%\msmpisetup.exe" -unattend -force -full -installroot "%cd%\temp" -verbose -log "%cd%\log.txt" || exit 1
@@ -48,7 +48,7 @@ move "%cd%\temp\mpiexec.exe" %LIBRARY_BIN% || exit 1
 move "%cd%\temp\mpitrace.man" %LIBRARY_BIN% || exit 1
 move "%cd%\temp\msmpilaunchsvc.exe" %LIBRARY_BIN% || exit 1
 move "%cd%\temp\smpd.exe" %LIBRARY_BIN% || exit 1
-move "%cd%\temp\*.exe" "%cd%\test" || exit 1
+move "%cd%\temp\*.exe" "%cd%\Tests" || exit 1
 move "%cd%\temp\*" "%cd%\License" || exit 1
 
 echo "checking installroot..."
@@ -56,8 +56,8 @@ dir /s /b "%cd%\temp"
 rmdir "%cd%\temp" || exit 1
 echo "checking License..."
 dir /s /b "%cd%\License"
-echo "checking test..."
-dir /s /b "%cd%\test"
+echo "checking Tests..."
+dir /s /b "%cd%\Tests"
 
 echo "DONE!"
 
