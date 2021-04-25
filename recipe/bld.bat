@@ -70,7 +70,7 @@ for %%F in (activate deactivate) DO (
 
 echo "patching mpi.h..."
 patch "%LIBRARY_INC%\mpi.h" "%RECIPE_DIR%\MSMPI_VER.diff" || exit 1
-copy "%RECIPE_DIR%\get_mpi_ver.c" .\Tests || exit 1
+copy "%RECIPE_DIR%\*" .\Tests || exit 1
 
 echo "checking source dir..."
 dir /s /b
