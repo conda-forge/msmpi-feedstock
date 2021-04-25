@@ -11,6 +11,9 @@ if not exist %LIBRARY_INC% mkdir %LIBRARY_INC% || exit 1
 :: echo "check existing msmpi.dll..."
 :: where /r c:\ msmpi.dll
 
+echo "check installed programs..."
+wmic product get name
+
 echo "check pwd..."
 dir /s /b
 
