@@ -41,11 +41,12 @@ test:
     - Tests/*  # [win]
   requires:
     - {{ compiler('c') }}
-    - python
-    - pip
-    - cython
-    - setuptools
-    - git
+    # These deps are needed for the mpi4py tests
+    # - python
+    # - pip
+    # - cython
+    # - setuptools
+    # - git
   commands:
     # simple package integraty check
     - if not exist %LIBRARY_BIN%\\mpiexec.exe exit 1  # [win]
@@ -63,7 +64,7 @@ test:
     - mpiexec.exe -d 3 -n 2 Tests\\MpiPingpong.exe -m  # [win]
     - mpiexec.exe -d 3 -n 2 Tests\\IMB_MPI1.exe PingPong PingPing PingPongAnySource PingPingAnySource Sendrecv Allreduce -off_cache -1 -msglog 10  # [win]
 
-    # This works! Just comment out to save time while I'm testing other things
+    # This works! Just comment out to save time...
     ## test compiling + linking + execution
     #- git clone https://github.com/mpi4py/mpi4py.git
     #- cd mpi4py
