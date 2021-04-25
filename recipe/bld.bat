@@ -4,6 +4,12 @@ if not exist %LIBRARY_BIN% mkdir %LIBRARY_BIN% || exit 1
 if not exist %LIBRARY_LIB% mkdir %LIBRARY_LIB% || exit 1
 if not exist %LIBRARY_INC% mkdir %LIBRARY_INC% || exit 1
 
+echo "check existing mpi.h..."
+where /r c:\ mpi.h
+
+echo "check existing msmpi.dll..."
+where /r c:\ msmpi.dll
+
 echo "check pwd..."
 dir /s /b
 

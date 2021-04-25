@@ -64,7 +64,8 @@ test:
     # test compiling + linking + execution; also check if MSMPI_VER is patched correctly
     - git clone https://github.com/mpi4py/mpi4py.git
     - cd mpi4py
-    - python -m pip install --no-deps . -vv
+    - pip install -v .
+    - cd ..
     - python -c "from mpi4py import MPI; print(MPI.Get_library_version())"
     - mpiexec -n 2 python -m mpi4py.bench helloworld
     - mpiexec -n 2 python -m mpi4py.bench ringtest
