@@ -4,16 +4,13 @@ if not exist %LIBRARY_BIN% mkdir %LIBRARY_BIN% || exit 1
 if not exist %LIBRARY_LIB% mkdir %LIBRARY_LIB% || exit 1
 if not exist %LIBRARY_INC% mkdir %LIBRARY_INC% || exit 1
 
-:: This takes too long, let's worry about it later
-:: echo "check existing mpi.h..."
-:: where /r c:\ mpi.h
-:: 
-:: echo "check existing msmpi.dll..."
-:: where /r c:\ msmpi.dll
-
+:: Even if we do this it still doesn't help to fix the PMP version mismatch error
+:: (https://github.com/conda-forge/msmpi-feedstock/issues/2), so we rely on the
+:: installer to force updating it for testing...
 :: echo "check installed programs..."
-:: wmic product get name
-wmic product where name="Microsoft MPI (7.1.12437.25)" call uninstall || exit 1
+:: wmic product get name  || exit 1
+:: echo "remove MPI from the image..."
+:: wmic product where name="Microsoft MPI (7.1.12437.25)" call uninstall || exit 1
 
 echo "check pwd..."
 dir /s /b
@@ -41,10 +38,10 @@ mkdir Tests
 echo "Installing MS-MPI Runtime..."
 :: this does not work because it insists on installing to C:\Program Files\Microsoft MPI\, not to our custom path;
 :: however, we still need this to overwrite the vm image's built-in installation so that we can run tests
-:: "%cd%\msmpisetup.exe" -unattend -force -full -installroot "%cd%\temp" -verbose -log "%cd%\log.txt" || exit 1
-:: echo "printing log..."
-:: type "%cd%\log.txt" || exit 1
-:: del log.txt || exit 1
+"%cd%\msmpisetup.exe" -unattend -force -full -installroot "%cd%\temp" -verbose -log "%cd%\log.txt" || exit 1
+echo "printing log..."
+type "%cd%\log.txt" || exit 1
+del log.txt || exit 1
 :: this extraction does the real work for the purpose of packaging
 7z x msmpisetup.exe -o"%cd%\temp" || exit 1
 
@@ -73,7 +70,7 @@ for %%F in (activate deactivate) DO (
 
 echo "patching mpi.h..."
 patch "%LIBRARY_INC%\mpi.h" "%RECIPE_DIR%\MSMPI_VER.diff" || exit 1
-copy "%RECIPE_DIR%\get_mpi_ver.c" . || exit 1
+copy "%RECIPE_DIR%\get_mpi_ver.c" .\Tests || exit 1
 
 echo "checking source dir..."
 dir /s /b

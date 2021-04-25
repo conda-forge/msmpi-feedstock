@@ -38,8 +38,7 @@ requirements:
 
 test:
   source_files:
-    - Tests/*.exe  # [win]
-    - get_mpi_ver.c  # [win]
+    - Tests/*  # [win]
   requires:
     - {{ compiler('c') }}
     - python
@@ -75,10 +74,10 @@ test:
     #- mpiexec -n 2 python -m mpi4py.bench ringtest
 
     # check if MSMPI_VER is correctly patched
-    - cl.exe -I%LIBRARY_INC% get_mpi_ver.c
+    - cl.exe -I%LIBRARY_INC% Tests\\get_mpi_ver.c /Fe"%cd%\get_mpi_ver.exe"
     - for /f "tokens=* usebackq" %%f in (`get_mpi_ver`) do (set "mpi_ver=%%f")
     # TODO(leofang): we could compute this, yes, but don't bother as MS-MPI is not evolving...
-    - if not %mpi_ver% == 2561 exit 1  # [win]  # for v10.1.x
+    - if not %mpi_ver% == 2561 exit 1  # [win]  # for MS-MPI v10.1.x
 
 about:
   home: https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi
