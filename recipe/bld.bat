@@ -15,7 +15,7 @@ if not exist %LIBRARY_INC% mkdir %LIBRARY_INC% || exit 1
 :: echo "check registry..."
 :: REG QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\HPC" || exit 1
 echo "hunt down smpd..."
-tasklist /v /svc  
+tasklist /v  
 exit 1
 
 echo "check pwd..."
