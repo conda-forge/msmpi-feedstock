@@ -37,10 +37,12 @@ rmdir /q /s temp || exit 1
 mkdir temp
 mkdir Tests
 echo "Installing MS-MPI Runtime..."
-:: this does not work because it keeps installing to C:\Program Files\Microsoft MPI\ ...
-:: "%cd%\msmpisetup.exe" -unattend -force -full -installroot "%cd%\temp" -verbose -log "%cd%\log.txt" || exit 1
-:: echo "printing log..."
-:: type "%cd%\log.txt"
+:: this does not work because it keeps installing to C:\Program Files\Microsoft MPI\, not to our custom path;
+:: however, we need this to overwrite the vm image's built-in installation so that we can run tests
+"%cd%\msmpisetup.exe" -unattend -force -full -installroot "%cd%\temp" -verbose -log "%cd%\log.txt" || exit 1
+echo "printing log..."
+type "%cd%\log.txt"
+:: this extraction does the real work for the purpose of packaging
 7z x msmpisetup.exe -o"%cd%\temp" || exit 1
 
 move "%cd%\temp\*.dll" %LIBRARY_BIN% || exit 1

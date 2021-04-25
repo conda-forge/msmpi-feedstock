@@ -51,7 +51,7 @@ test:
     - if not %MSMPI_LIB64% == %LIBRARY_LIB% exit 1  # [win]
     - where mpiexec.exe  # [win]
     - where smpd.exe  # [win]
-    - mpiexec.exe -n 2 Tests\\mpipingpong.exe -m  # [win]
+    - mpiexec.exe -d 3 -n 2 Tests\\MpiPingpong.exe -m  # [win]
 
 about:
   home: https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi
