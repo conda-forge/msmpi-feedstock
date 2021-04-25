@@ -37,7 +37,7 @@ requirements:
 
 test:
   source_files:
-    - Tests\\*.exe  # [win]
+    - Tests/*.exe  # [win]
   requires:
     - {{ compiler('c') }}
   commands:
