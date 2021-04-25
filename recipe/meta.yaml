@@ -41,6 +41,7 @@ test:
   requires:
     - {{ compiler('c') }}
     - python
+    - pip
     - git
   commands:
     # simple package integraty check
