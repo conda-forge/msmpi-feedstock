@@ -17,8 +17,8 @@ wmic product where name="Microsoft MPI (7.1.12437.25)" call uninstall || exit 1
 :: REG QUERY "HKEY_CURRENT_USER\Software\Microsoft\MPI" || exit 1
 :: echo "hunt down smpd..."
 :: tasklist /v  
-del /f /q C:\Windows\System32\msmpi.dll
-del /f /q C:\Windows\System32\msmpires.dll
+del /f /q C:\Windows\System32\msmpi.dll || exit 1
+del /f /q C:\Windows\System32\msmpires.dll || exit 1
 where msmpi.dll
 where msmpires.dll
 :: exit 1
