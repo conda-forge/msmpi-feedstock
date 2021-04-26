@@ -21,8 +21,8 @@ set MSMPI_INC=%LIBRARY_INC%
 set MSMPI_LIB64=%LIBRARY_LIB%
 set MSMPI_LIB32=""
 
-echo "check registry..."
-REG QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MPI" || exit 1
+:: echo "check registry..."
+:: REG QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MPI" || exit 1
 
 echo "edit registry..."
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MPI" /t REG_SZ /v Version /d 10.1.2 /f || exit 1
