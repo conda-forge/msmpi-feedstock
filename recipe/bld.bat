@@ -18,6 +18,7 @@ if not exist %LIBRARY_INC% mkdir %LIBRARY_INC% || exit 1
 :: echo "hunt down smpd..."
 :: tasklist /v  
 where msmpi.dll
+where msmpires.dll
 exit 1
 
 echo "check pwd..."
