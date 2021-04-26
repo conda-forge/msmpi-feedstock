@@ -4,6 +4,8 @@ if not exist %LIBRARY_BIN% mkdir %LIBRARY_BIN% || exit 1
 if not exist %LIBRARY_LIB% mkdir %LIBRARY_LIB% || exit 1
 if not exist %LIBRARY_INC% mkdir %LIBRARY_INC% || exit 1
 
+dir "C:\Program Files\Microsoft MPI\" || exit 1
+
 echo "check registry..."
 REG QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MPI" || exit 1
 
@@ -12,8 +14,14 @@ REG QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MPI" || exit 1
 :: installer to force updating it for testing...
 :: echo "check installed programs..."
 :: wmic product get name  || exit 1
-echo "remove MPI from the image..."
-wmic product where name="Microsoft MPI (7.1.12437.25)" call uninstall || exit 1
+:: echo "remove MPI from the image..."
+:: wmic product where name="Microsoft MPI (7.1.12437.25)" call uninstall || exit 1
+
+echo "edit registry..."
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MPI" /t REG_SZ /v Version /d 10.1.2 /f || exit 1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MPI" /t REG_SZ /v InstallRoot /d "%PREFIX%\Library" /f || exit 1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MPI" /t REG_SZ /v MSPMSProvider /d "%LIBRARY_BIN%\msmpi.dll" /f || exit 1
+REG DELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MPI" /t REG_SZ /v RedistPath /f || exit 1
 
 echo "check registry..."
 :: REG QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\HPC" || exit 1
@@ -21,10 +29,10 @@ echo "check registry..."
 REG QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MPI" || exit 1
 :: echo "hunt down smpd..."
 :: tasklist /v  
-del /f /q C:\Windows\System32\msmpi.dll || exit 1
-del /f /q C:\Windows\System32\msmpires.dll || exit 1
-where msmpi.dll
-where msmpires.dll
+:: del /f /q C:\Windows\System32\msmpi.dll || exit 1
+:: del /f /q C:\Windows\System32\msmpires.dll || exit 1
+:: where msmpi.dll
+:: where msmpires.dll
 :: exit 1
 
 echo "check pwd..."
