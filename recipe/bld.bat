@@ -4,6 +4,9 @@ if not exist %LIBRARY_BIN% mkdir %LIBRARY_BIN% || exit 1
 if not exist %LIBRARY_LIB% mkdir %LIBRARY_LIB% || exit 1
 if not exist %LIBRARY_INC% mkdir %LIBRARY_INC% || exit 1
 
+echo "check registry..."
+REG QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MPI" || exit 1
+
 :: Even if we do this it still doesn't help to fix the PMP version mismatch error
 :: (https://github.com/conda-forge/msmpi-feedstock/issues/2), so we rely on the
 :: installer to force updating it for testing...
@@ -12,9 +15,10 @@ if not exist %LIBRARY_INC% mkdir %LIBRARY_INC% || exit 1
 echo "remove MPI from the image..."
 wmic product where name="Microsoft MPI (7.1.12437.25)" call uninstall || exit 1
 
-:: echo "check registry..."
+echo "check registry..."
 :: REG QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\HPC" || exit 1
 :: REG QUERY "HKEY_CURRENT_USER\Software\Microsoft\MPI" || exit 1
+REG QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MPI" || exit 1
 :: echo "hunt down smpd..."
 :: tasklist /v  
 del /f /q C:\Windows\System32\msmpi.dll || exit 1
