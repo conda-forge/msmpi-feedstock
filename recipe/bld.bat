@@ -21,7 +21,7 @@ echo "edit registry..."
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MPI" /t REG_SZ /v Version /d 10.1.2 /f || exit 1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MPI" /t REG_SZ /v InstallRoot /d "%PREFIX%\Library" /f || exit 1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MPI" /t REG_SZ /v MSPMSProvider /d "%LIBRARY_BIN%\msmpi.dll" /f || exit 1
-REG DELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MPI" /t REG_SZ /v RedistPath /f || exit 1
+REG DELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MPI" /v RedistPath /f || exit 1
 
 echo "check registry..."
 :: REG QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\HPC" || exit 1
