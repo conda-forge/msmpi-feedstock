@@ -17,9 +17,11 @@ wmic product where name="Microsoft MPI (7.1.12437.25)" call uninstall || exit 1
 :: REG QUERY "HKEY_CURRENT_USER\Software\Microsoft\MPI" || exit 1
 :: echo "hunt down smpd..."
 :: tasklist /v  
+del /f /q C:\Windows\System32\msmpi.dll
+del /f /q C:\Windows\System32\msmpires.dll
 where msmpi.dll
 where msmpires.dll
-exit 1
+:: exit 1
 
 echo "check pwd..."
 dir /s /b
@@ -47,10 +49,10 @@ mkdir Tests
 echo "Installing MS-MPI Runtime..."
 :: this does not work because it insists on installing to C:\Program Files\Microsoft MPI\, not to our custom path;
 :: however, we still need this to overwrite the vm image's built-in installation so that we can run tests
-"%cd%\msmpisetup.exe" -unattend -force -full -installroot "%cd%\temp" -verbose -log "%cd%\log.txt" || exit 1
-echo "printing log..."
-type "%cd%\log.txt" || exit 1
-del log.txt || exit 1
+:: "%cd%\msmpisetup.exe" -unattend -force -full -installroot "%cd%\temp" -verbose -log "%cd%\log.txt" || exit 1
+:: echo "printing log..."
+:: type "%cd%\log.txt" || exit 1
+:: del log.txt || exit 1
 :: this extraction does the real work for the purpose of packaging
 7z x msmpisetup.exe -o"%cd%\temp" || exit 1
 
