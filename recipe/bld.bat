@@ -47,6 +47,7 @@ del log.txt || exit 1
 
 move "C:\Windows\System32\msmpi.dll" %LIBRARY_BIN% || exit 1
 move "C:\Windows\System32\msmpires.dll" %LIBRARY_BIN% || exit 1
+dir "C:\Program Files\Microsoft MPI\" || exit 1
 move "C:\Program Files\Microsoft MPI\Bin\*" %LIBRARY_BIN% || exit 1
 move "C:\Program Files\Microsoft MPI\Benchmarks\*" "%cd%\Tests" || exit 1
 move "C:\Program Files\Microsoft MPI\License\*" "%cd%\License" || exit 1
