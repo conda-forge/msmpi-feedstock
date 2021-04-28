@@ -52,6 +52,7 @@ rmdir "%PREFIX%\Library\License" || exit 1
 echo "checking License..."
 dir /s /b "%cd%\License"
 echo "checking Tests..."
+copy "%RECIPE_DIR%\tests\*" .\Tests || exit 1
 dir /s /b "%cd%\Tests"
 
 echo "copy the [de]activate scripts..."
@@ -63,7 +64,6 @@ for %%F in (activate deactivate) DO (
 echo "patching mpi.h..."
 :: add --binary to handle the CRLF line ending
 patch --binary "%LIBRARY_INC%\mpi.h" "%RECIPE_DIR%\MSMPI_VER.diff" || exit 1
-copy "%RECIPE_DIR%\tests\*" .\Tests || exit 1
 
 echo "checking source dir..."
 dir /s /b
