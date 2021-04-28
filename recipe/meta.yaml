@@ -44,6 +44,7 @@ test:
   commands:
     # simple package integraty check
     - if not exist %LIBRARY_BIN%\\mpiexec.exe exit 1  # [win]
+    - if not exist %LIBRARY_BIN%\\smpd.exe exit 1  # [win]
     - if not exist %LIBRARY_BIN%\\msmpi.dll exit 1  # [win]
     - if not exist %LIBRARY_INC%\\mpi.f90 exit 1  # [win]
     - if not exist %LIBRARY_INC%\\mpi.h exit 1  # [win]
@@ -56,7 +57,7 @@ test:
     - where mpiexec.exe  # [win]
     - where smpd.exe  # [win]
     - mpiexec.exe -d 3 -n 2 Tests\\MpiPingpong.exe -m  # [win]
-    - mpiexec.exe -d 3 -n 2 Tests\\IMB_MPI1.exe PingPong PingPing PingPongAnySource PingPingAnySource Sendrecv Allreduce -off_cache -1 -msglog 10  # [win]
+    - mpiexec.exe -d 3 -n 2 Tests\\IMB-MPI1.exe PingPong PingPing PingPongAnySource PingPingAnySource Sendrecv Allreduce -off_cache -1 -msglog 10  # [win]
 
     # This works! Just comment out to save time...
     ## test compiling + linking + execution

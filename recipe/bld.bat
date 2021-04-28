@@ -47,6 +47,7 @@ move "%PREFIX%\Library\Benchmarks\*" "%cd%\Tests" || exit 1
 rmdir "%PREFIX%\Library\Benchmarks" || exit 1
 move "%PREFIX%\Library\License\*" "%cd%\License" || exit 1
 rmdir "%PREFIX%\Library\License" || exit 1
+rmdir /s /q "%PREFIX%\Library\Redist" || exit 1
 
 :: note: conda-build would copy the two folders below for us
 echo "checking License..."
