@@ -9,8 +9,8 @@ if not exist %LIBRARY_INC% mkdir %LIBRARY_INC% || exit 1
 :: installer to force updating it for testing...
 :: echo "check installed programs..."
 :: wmic product get name  || exit 1
-:: echo "remove MPI from the image..."
-:: wmic product where name="Microsoft MPI (7.1.12437.25)" call uninstall || exit 1
+echo "remove MPI from the image..."
+wmic product where name="Microsoft MPI (7.1.12437.25)" call uninstall || exit 1
 
 echo "check pwd..."
 dir /s /b
@@ -36,22 +36,20 @@ rmdir /q /s temp || exit 1
 mkdir temp
 mkdir Tests
 echo "Installing MS-MPI Runtime..."
-:: this does not work because it insists on installing to C:\Program Files\Microsoft MPI\, not to our custom path;
-:: however, we still need this to overwrite the vm image's built-in installation so that we can run tests
+:: this installs to C:\Program Files\Microsoft MPI\ instead of to our custom path (-installroot);
+:: however, we still need this to
+:: 1. overwrite the vm image's built-in installation so that we can run tests
+:: 2. generate the correct dlls (yes, the installer would write to the dlls!)
 "%cd%\msmpisetup.exe" -unattend -force -full -installroot "%cd%\temp" -verbose -log "%cd%\log.txt" || exit 1
 echo "printing log..."
 type "%cd%\log.txt" || exit 1
 del log.txt || exit 1
-:: this extraction does the real work for the purpose of packaging
-7z x msmpisetup.exe -o"%cd%\temp" || exit 1
 
-move "%cd%\temp\*.dll" %LIBRARY_BIN% || exit 1
-move "%cd%\temp\mpiexec.exe" %LIBRARY_BIN% || exit 1
-move "%cd%\temp\mpitrace.man" %LIBRARY_BIN% || exit 1
-move "%cd%\temp\msmpilaunchsvc.exe" %LIBRARY_BIN% || exit 1
-move "%cd%\temp\smpd.exe" %LIBRARY_BIN% || exit 1
-move "%cd%\temp\*.exe" "%cd%\Tests" || exit 1
-move "%cd%\temp\*" "%cd%\License" || exit 1
+move "C:\Windows\System32\msmpi.dll" %LIBRARY_BIN% || exit 1
+move "C:\Windows\System32\msmpires.dll" %LIBRARY_BIN% || exit 1
+move "C:\Program Files\Microsoft MPI\Bin\*" %LIBRARY_BIN% || exit 1
+move "C:\Program Files\Microsoft MPI\Benchmarks\*" "%cd%\Tests" || exit 1
+move "C:\Program Files\Microsoft MPI\License\*" "%cd%\License" || exit 1
 
 echo "checking installroot..."
 dir /s /b "%cd%\temp"
