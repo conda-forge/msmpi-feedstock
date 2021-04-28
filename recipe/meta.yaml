@@ -84,9 +84,9 @@ about:
   license: MIT
   license_file:
     - License\MicrosoftMPI-SDK-EULA.rtf
-    - License\MicrosoftMPI_Redistributable_EULA.rtf
+    - License\MicrosoftMPI-Redistributable-EULA.rtf
     - License\MPI-SDK-TPN.txt
-    - License\MPI_Redistributables_TPN.txt
+    - License\MPI-Redistributables-TPN.txt
   summary: Microsoft message-passing-interface (MS-MPI)
   description: |
     Microsoft MPI (MS-MPI) is a Microsoft implementation of the Message Passing
