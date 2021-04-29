@@ -2,9 +2,9 @@
 if defined CONDA_BUILD_STATE (
     @echo on
 
-    :: We should ensure the pre-installed MS-MPI v7 is erased
-    :: so that downstream packages do not need to worry about
-    :: how to run MPI tests.
+    rem We should ensure the pre-installed MS-MPI v7 is erased
+    rem so that downstream packages do not need to worry about
+    rem how to run MPI tests.
     if not "%PKG_NAME%"=="msmpi" (
       echo "remove MPI from the image..."
       wmic product where name="Microsoft MPI (7.1.12437.25)" call uninstall || exit 1
