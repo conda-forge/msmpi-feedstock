@@ -1,5 +1,16 @@
+@echo off
 if defined CONDA_BUILD_STATE (
     @echo on
+
+    rem We should ensure the pre-installed MS-MPI v7 is erased
+    rem so that downstream packages do not need to worry about
+    rem how to run MPI tests.
+    if not "%PKG_NAME%"=="msmpi" (
+      echo "remove MPI from the image..."
+      wmic product where name="Microsoft MPI (7.1.12437.25)" call uninstall || exit 1
+      del /f /q "C:\Windows\System32\msmpi.dll" || exit 1
+      del /f /q "C:\Windows\System32\msmpires.dll" || exit 1
+    )
 )
 
 :: Backup environment variables (only if the variables are set)
