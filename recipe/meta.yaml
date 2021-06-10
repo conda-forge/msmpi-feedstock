@@ -24,8 +24,20 @@ requirements:
     - mpi 1.0 msmpi
 
 test:
+  source_files:
+    - Tests/*  # [win]
+  requires:
+    - {{ compiler('c') }}
+    # These deps are needed for the mpi4py tests
+    # - python
+    # - pip
+    # - cython
+    # - setuptools
+    # - git
   commands:
+    # simple package integraty check
     - if not exist %LIBRARY_BIN%\\mpiexec.exe exit 1  # [win]
+    - if not exist %LIBRARY_BIN%\\smpd.exe exit 1  # [win]
     - if not exist %LIBRARY_BIN%\\msmpi.dll exit 1  # [win]
     - if not exist %LIBRARY_INC%\\mpi.f90 exit 1  # [win]
     - if not exist %LIBRARY_INC%\\mpi.h exit 1  # [win]
@@ -34,6 +46,33 @@ test:
     - if not %MSMPI_BIN% == %LIBRARY_BIN% exit 1  # [win]
     - if not %MSMPI_INC% == %LIBRARY_INC% exit 1  # [win]
     - if not %MSMPI_LIB64% == %LIBRARY_LIB% exit 1  # [win]
+
+    # check if binaries work ok
+    - where mpiexec.exe  # [win]
+    - where smpd.exe  # [win]
+    - mpiexec.exe -d 3 -n 2 Tests\\MpiPingpong.exe -m  # [win]
+    - mpiexec.exe -d 3 -n 2 Tests\\IMB-MPI1.exe PingPong PingPing PingPongAnySource PingPingAnySource Sendrecv Allreduce -off_cache -1 -msglog 10  # [win]
+
+    # This works! Just comment out to save time...
+    ## test compiling + linking + execution
+    #- git clone https://github.com/mpi4py/mpi4py.git
+    #- cd mpi4py
+    #- pip install --no-build-isolation --no-deps -v .
+    #- cd ..
+    #- python -c "from mpi4py import MPI; print(MPI.Get_library_version())"
+    #- mpiexec -n 2 python -m mpi4py.bench helloworld
+    #- mpiexec -n 2 python -m mpi4py.bench ringtest
+
+    # check if MSMPI_VER is correctly patched
+    - cl.exe -I%LIBRARY_INC% Tests\\get_mpi_ver.c /Fe"%cd%\get_mpi_ver.exe"
+    - for /f "tokens=* usebackq" %%f in (`get_mpi_ver`) do (set "mpi_ver=%%f")
+    # TODO(leofang): we could compute this, yes, but don't bother as MS-MPI is not evolving...
+    - if not %mpi_ver% == 2561 exit 1  # [win]  # for MS-MPI v10.1.x
+
+    # check compiling & running simple C code
+    # TODO(leofang): add C++ & Fortran tests?
+    - cl.exe -I%LIBRARY_INC% Tests\\helloworld.c /Fe"%cd%\helloworld.exe" /link /LIBPATH:"%LIBRARY_LIB%" msmpi.lib
+    - mpiexec -n 4 helloworld.exe
 
 about:
   home: https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi
