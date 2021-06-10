@@ -1,6 +1,8 @@
 {% set name = "msmpi" %}
-{% set version = "10.1.2" %}
-{% set base_url = "http://download.microsoft.com/download/a/5/2/a5207ca5-1203-491a-8fb8-906fd68ae623/" %}
+{% set version = "10.1.1" %}
+{% set base_url = "http://download.microsoft.com/download/2/9/e/29efe9b1-16d7-4912-a229-6734b0c4e235/" %}
+# {% set version = "10.1.2" %}
+# {% set base_url = "http://download.microsoft.com/download/a/5/2/a5207ca5-1203-491a-8fb8-906fd68ae623/" %}
 
 package:
   name: {{ name|lower }}
@@ -11,14 +13,16 @@ source:
 
   # This is the MS-MPI SDK
   - url: {{ base_url }}msmpisdk.msi
-    sha256: d8c07fc079d35d373e14a6894288366b74147539096d43852cb0bbae32b33e44
+    sha256: 6df47378c0acbb2b76989092165d7279ee096605fcaf7e455de733b2ffdf4bcc
+    #sha256: d8c07fc079d35d373e14a6894288366b74147539096d43852cb0bbae32b33e44  # 10.1.2
 
   # This is the MS-MPI Runtime
   - url: {{ base_url }}msmpisetup.exe
-    sha256: c305ce3f05d142d519f8dd800d83a4b894fc31bcad30512cefb557feaccbe8b4
+    sha256: 7308fd15e437d6829fd9c6ec5d801380faa3bff6e66e1dee3e8e005106fb6a68
+    #sha256: c305ce3f05d142d519f8dd800d83a4b894fc31bcad30512cefb557feaccbe8b4  # 10.1.2
 
 build:
-  number: 0
+  number: 3
   skip: true  # [not win]
 
 requirements:
