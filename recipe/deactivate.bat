@@ -1,8 +1,3 @@
-@echo off
-if defined CONDA_BUILD_STATE (
-    @echo on
-)
-
 if not "%MSMPI_BIN_CONDA_BACKUP%"=="" (
     set "MSMPI_BIN=%MSMPI_BIN_CONDA_BACKUP%"
     set "MSMPI_BIN_CONDA_BACKUP="

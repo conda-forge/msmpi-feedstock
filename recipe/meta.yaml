@@ -18,7 +18,7 @@ source:
     sha256: c305ce3f05d142d519f8dd800d83a4b894fc31bcad30512cefb557feaccbe8b4
 
 build:
-  number: 2
+  number: 1
   skip: true  # [not win]
 
 requirements:
@@ -27,6 +27,8 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('m2w64_fortran') }}
     - m2-patch
+  host:
+    - 7zip
   run:
     - mpi 1.0 msmpi
 
@@ -44,7 +46,6 @@ test:
   commands:
     # simple package integraty check
     - if not exist %LIBRARY_BIN%\\mpiexec.exe exit 1  # [win]
-    - if not exist %LIBRARY_BIN%\\smpd.exe exit 1  # [win]
     - if not exist %LIBRARY_BIN%\\msmpi.dll exit 1  # [win]
     - if not exist %LIBRARY_INC%\\mpi.f90 exit 1  # [win]
     - if not exist %LIBRARY_INC%\\mpi.h exit 1  # [win]
@@ -57,7 +58,7 @@ test:
     - where mpiexec.exe  # [win]
     - where smpd.exe  # [win]
     - mpiexec.exe -d 3 -n 2 Tests\\MpiPingpong.exe -m  # [win]
-    - mpiexec.exe -d 3 -n 2 Tests\\IMB-MPI1.exe PingPong PingPing PingPongAnySource PingPingAnySource Sendrecv Allreduce -off_cache -1 -msglog 10  # [win]
+    - mpiexec.exe -d 3 -n 2 Tests\\IMB_MPI1.exe PingPong PingPing PingPongAnySource PingPingAnySource Sendrecv Allreduce -off_cache -1 -msglog 10  # [win]
 
     # This works! Just comment out to save time...
     ## test compiling + linking + execution
@@ -85,9 +86,9 @@ about:
   license: MIT
   license_file:
     - License\MicrosoftMPI-SDK-EULA.rtf
-    - License\MicrosoftMPI-Redistributable-EULA.rtf
+    - License\MicrosoftMPI_Redistributable_EULA.rtf
     - License\MPI-SDK-TPN.txt
-    - License\MPI-Redistributables-TPN.txt
+    - License\MPI_Redistributables_TPN.txt
   summary: Microsoft message-passing-interface (MS-MPI)
   description: |
     Microsoft MPI (MS-MPI) is a Microsoft implementation of the Message Passing
