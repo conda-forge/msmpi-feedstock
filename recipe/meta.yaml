@@ -24,7 +24,7 @@ requirements:
     - mpi 1.0 msmpi
 
 test:
-  source_files:
+  files:
     - tests/*  # [win]
   requires:
     - {{ compiler('c') }}
