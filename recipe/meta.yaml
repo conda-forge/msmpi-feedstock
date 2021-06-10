@@ -25,7 +25,7 @@ requirements:
 
 test:
   source_files:
-    - Tests/*  # [win]
+    - tests/*  # [win]
   requires:
     - {{ compiler('c') }}
     # These deps are needed for the mpi4py tests
@@ -50,8 +50,8 @@ test:
     # check if binaries work ok
     - where mpiexec.exe  # [win]
     - where smpd.exe  # [win]
-    - mpiexec.exe -d 3 -n 2 Tests\\MpiPingpong.exe -m  # [win]
-    - mpiexec.exe -d 3 -n 2 Tests\\IMB-MPI1.exe PingPong PingPing PingPongAnySource PingPingAnySource Sendrecv Allreduce -off_cache -1 -msglog 10  # [win]
+    - mpiexec.exe -d 3 -n 2 tests\\MpiPingpong.exe -m  # [win]
+    - mpiexec.exe -d 3 -n 2 tests\\IMB-MPI1.exe PingPong PingPing PingPongAnySource PingPingAnySource Sendrecv Allreduce -off_cache -1 -msglog 10  # [win]
 
     # This works! Just comment out to save time...
     ## test compiling + linking + execution
@@ -64,14 +64,14 @@ test:
     #- mpiexec -n 2 python -m mpi4py.bench ringtest
 
     # check if MSMPI_VER is correctly patched
-    - cl.exe -I%LIBRARY_INC% Tests\\get_mpi_ver.c /Fe"%cd%\get_mpi_ver.exe"
+    - cl.exe -I%LIBRARY_INC% tests\\get_mpi_ver.c /Fe"%cd%\get_mpi_ver.exe"
     - for /f "tokens=* usebackq" %%f in (`get_mpi_ver`) do (set "mpi_ver=%%f")
     # TODO(leofang): we could compute this, yes, but don't bother as MS-MPI is not evolving...
     - if not %mpi_ver% == 2561 exit 1  # [win]  # for MS-MPI v10.1.x
 
     # check compiling & running simple C code
     # TODO(leofang): add C++ & Fortran tests?
-    - cl.exe -I%LIBRARY_INC% Tests\\helloworld.c /Fe"%cd%\helloworld.exe" /link /LIBPATH:"%LIBRARY_LIB%" msmpi.lib
+    - cl.exe -I%LIBRARY_INC% tests\\helloworld.c /Fe"%cd%\helloworld.exe" /link /LIBPATH:"%LIBRARY_LIB%" msmpi.lib
     - mpiexec -n 4 helloworld.exe
 
 about:
