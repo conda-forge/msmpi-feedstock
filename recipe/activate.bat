@@ -16,7 +16,7 @@ if defined MSMPI_LIB32 (
     set "MSMPI_LIB32_CONDA_BACKUP=%MSMPI_LIB32%"
 )
 
-set MSMPI_BIN=%LIBRARY_BIN%
-set MSMPI_INC=%LIBRARY_INC%
-set MSMPI_LIB64=%LIBRARY_LIB%
+set MSMPI_BIN=%PREFIX%\Library\bin
+set MSMPI_INC=%PREFIX%\Library\include
+set MSMPI_LIB64=%PREFIX%\Library\lib
 set MSMPI_LIB32=""
