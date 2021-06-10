@@ -13,10 +13,7 @@ Development: https://github.com/microsoft/Microsoft-MPI
 
 Documentation: https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi
 
-Microsoft MPI (MS-MPI) is a Microsoft implementation of the Message Passing
-Interface standard for developing and running parallel applications on the
-Windows platform.
-
+Microsoft MPI (MS-MPI) is a Microsoft implementation of the Message Passing Interface standard for developing and running parallel applications on the Windows platform.
 
 Current build status
 ====================
@@ -64,7 +61,6 @@ Installing `msmpi` from the `conda-forge` channel can be achieved by adding `con
 
 ```
 conda config --add channels conda-forge
-conda config --set channel_priority strict
 ```
 
 Once the `conda-forge` channel has been enabled, `msmpi` can be installed with:
@@ -135,14 +131,13 @@ build distinct package versions.
 
 In order to produce a uniquely identifiable distribution:
  * If the version of a package **is not** being increased, please add or increase
-   the [``build/number``](https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#build-number-and-string).
+   the [``build/number``](https://conda.io/docs/user-guide/tasks/build-packages/define-metadata.html#build-number-and-string).
  * If the version of a package **is** being increased, please remember to return
-   the [``build/number``](https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#build-number-and-string)
+   the [``build/number``](https://conda.io/docs/user-guide/tasks/build-packages/define-metadata.html#build-number-and-string)
    back to 0.
 
 Feedstock Maintainers
 =====================
 
 * [@RyanMcCarthy-NOAA](https://github.com/RyanMcCarthy-NOAA/)
-* [@leofang](https://github.com/leofang/)
 
