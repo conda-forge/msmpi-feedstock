@@ -1,0 +1,11 @@
+68a69,78
+> // Patched for Conda-Forge: We cannot touch the Windows Registry, which is the only
+> // way to correctly inform the value in MS-MPI's design, so we circumvent it by
+> // hard-wiring the version value here. See
+> // https://github.com/microsoft/Microsoft-MPI/blob/7ff6bdcdb1d5dc7b791e47457ee2686cd6b3d355/src/mpi.props#L15
+> // https://github.com/mpi4py/mpi4py/blob/18f16da45eaaacfba4cc0293964e1a6548d4c6a6/conf/mpiconfig.py#L194
+> // for how MSMPI_VER should be calculated.
+> 
+> // for v10.1.x
+> #define MSMPI_VER 0xA01
+> 
