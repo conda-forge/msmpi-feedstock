@@ -12,7 +12,7 @@ source:
     - conda-build.patch
 
 build:
-  number: 3
+  number: 6
   skip: true  # [not win]
 
 requirements:
@@ -48,12 +48,11 @@ test:
     - if not %MSMPI_LIB64% == %LIBRARY_LIB% exit 1  # [win]
 
     # check if binaries work ok
-    - where mpiexec.exe  # [win]
-    - where smpd.exe  # [win]
+    - where mpiexec.exe
+    - where smpd.exe
     
-    # These are from msmpi official installer
-    # - mpiexec.exe -d 3 -n 2 tests\\MpiPingpong.exe -m  # [win]
-    # - mpiexec.exe -d 3 -n 2 tests\\IMB-MPI1.exe PingPong PingPing PingPongAnySource PingPingAnySource Sendrecv Allreduce -off_cache -1 -msglog 10  # [win]
+    - mpiexec.exe /help2
+    - mpiexec.exe /help3
 
     # This works! Just comment out to save time...
     ## test compiling + linking + execution
@@ -74,7 +73,7 @@ test:
     # check compiling & running simple C code
     # TODO(leofang): add C++ & Fortran tests?
     - cl.exe -I%LIBRARY_INC% tests\\helloworld.c /Fe"%cd%\helloworld.exe" /link /LIBPATH:"%LIBRARY_LIB%" msmpi.lib
-    - mpiexec -n 4 helloworld.exe
+    - mpiexec.exe -n 4 helloworld.exe
 
 about:
   home: https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi
