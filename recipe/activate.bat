@@ -1,16 +1,13 @@
-@echo off
 if defined CONDA_BUILD_STATE (
     @echo on
+)
 
-    rem We should ensure the pre-installed MS-MPI v7 is erased
-    rem so that downstream packages do not need to worry about
-    rem how to run MPI tests.
-    if not "%PKG_NAME%"=="msmpi" (
-      echo "remove MPI from the image..."
-      wmic product where name="Microsoft MPI (7.1.12437.25)" call uninstall || exit 1
-      del /f /q "C:\Windows\System32\msmpi.dll" || exit 1
-      del /f /q "C:\Windows\System32\msmpires.dll" || exit 1
-    )
+if exist "C:\Windows\System32\msmpi.dll" (
+    echo "You seem to have a system wide installation of MSMPI. "
+    echo "Due to the way DLL loading works on windows, system wide installation "
+    echo "will probably overshadow the conda installation. Uninstalling "
+    echo "the system wide installation and forced deleting C:\Windows\System32\msmpi*.dll"
+    echo "will help, but may break other software using the system wide installation."
 )
 
 :: Backup environment variables (only if the variables are set)
@@ -27,7 +24,7 @@ if defined MSMPI_LIB32 (
     set "MSMPI_LIB32_CONDA_BACKUP=%MSMPI_LIB32%"
 )
 
-set MSMPI_BIN=%LIBRARY_BIN%
-set MSMPI_INC=%LIBRARY_INC%
-set MSMPI_LIB64=%LIBRARY_LIB%
+set MSMPI_BIN=%PREFIX%\Library\bin
+set MSMPI_INC=%PREFIX%\Library\include
+set MSMPI_LIB64=%PREFIX%\Library\lib
 set MSMPI_LIB32=""

@@ -1,24 +1,18 @@
 {% set name = "msmpi" %}
-{% set version = "10.1.2" %}
-{% set base_url = "http://download.microsoft.com/download/a/5/2/a5207ca5-1203-491a-8fb8-906fd68ae623/" %}
+{% set version = "10.1.1" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  # See https://github.com/mpi4py/mpi4py/blob/master/.azure/install-msmpi.ps1
-
-  # This is the MS-MPI SDK
-  - url: {{ base_url }}msmpisdk.msi
-    sha256: d8c07fc079d35d373e14a6894288366b74147539096d43852cb0bbae32b33e44
-
-  # This is the MS-MPI Runtime
-  - url: {{ base_url }}msmpisetup.exe
-    sha256: c305ce3f05d142d519f8dd800d83a4b894fc31bcad30512cefb557feaccbe8b4
+  url: https://github.com/microsoft/Microsoft-MPI/archive/v{{ version }}.tar.gz
+  sha256: 63c7da941fc4ffb05a0f97bd54a67968c71f63389a0d162d3182eabba1beab3d
+  patches:
+    - conda-build.patch
 
 build:
-  number: 2
+  number: 6
   skip: true  # [not win]
 
 requirements:
@@ -26,13 +20,12 @@ requirements:
     - {{ compiler('cxx') }}
     - {{ compiler('c') }}
     - {{ compiler('m2w64_fortran') }}
-    - m2-patch
   run:
     - mpi 1.0 msmpi
 
 test:
-  source_files:
-    - Tests/*  # [win]
+  files:
+    - tests/*  # [win]
   requires:
     - {{ compiler('c') }}
     # These deps are needed for the mpi4py tests
@@ -49,15 +42,17 @@ test:
     - if not exist %LIBRARY_INC%\\mpi.f90 exit 1  # [win]
     - if not exist %LIBRARY_INC%\\mpi.h exit 1  # [win]
     - if not exist %LIBRARY_LIB%\\msmpi.lib exit 1  # [win]
+    - if not exist %LIBRARY_LIB%\\mpifort.lib exit 1  # [win]
     - if not %MSMPI_BIN% == %LIBRARY_BIN% exit 1  # [win]
     - if not %MSMPI_INC% == %LIBRARY_INC% exit 1  # [win]
     - if not %MSMPI_LIB64% == %LIBRARY_LIB% exit 1  # [win]
 
     # check if binaries work ok
-    - where mpiexec.exe  # [win]
-    - where smpd.exe  # [win]
-    - mpiexec.exe -d 3 -n 2 Tests\\MpiPingpong.exe -m  # [win]
-    - mpiexec.exe -d 3 -n 2 Tests\\IMB-MPI1.exe PingPong PingPing PingPongAnySource PingPingAnySource Sendrecv Allreduce -off_cache -1 -msglog 10  # [win]
+    - where mpiexec.exe
+    - where smpd.exe
+    
+    - mpiexec.exe /help2
+    - mpiexec.exe /help3
 
     # This works! Just comment out to save time...
     ## test compiling + linking + execution
@@ -70,24 +65,20 @@ test:
     #- mpiexec -n 2 python -m mpi4py.bench ringtest
 
     # check if MSMPI_VER is correctly patched
-    - cl.exe -I%LIBRARY_INC% Tests\\get_mpi_ver.c /Fe"%cd%\get_mpi_ver.exe"
+    - cl.exe -I%LIBRARY_INC% tests\\get_mpi_ver.c /Fe"%cd%\get_mpi_ver.exe"
     - for /f "tokens=* usebackq" %%f in (`get_mpi_ver`) do (set "mpi_ver=%%f")
     # TODO(leofang): we could compute this, yes, but don't bother as MS-MPI is not evolving...
     - if not %mpi_ver% == 2561 exit 1  # [win]  # for MS-MPI v10.1.x
 
     # check compiling & running simple C code
     # TODO(leofang): add C++ & Fortran tests?
-    - cl.exe -I%LIBRARY_INC% Tests\\helloworld.c /Fe"%cd%\helloworld.exe" /link /LIBPATH:"%LIBRARY_LIB%" msmpi.lib
-    - mpiexec -n 4 helloworld.exe
+    - cl.exe -I%LIBRARY_INC% tests\\helloworld.c /Fe"%cd%\helloworld.exe" /link /LIBPATH:"%LIBRARY_LIB%" msmpi.lib
+    - mpiexec.exe -n 4 helloworld.exe
 
 about:
   home: https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi
   license: MIT
-  license_file:
-    - License\MicrosoftMPI-SDK-EULA.rtf
-    - License\MicrosoftMPI-Redistributable-EULA.rtf
-    - License\MPI-SDK-TPN.txt
-    - License\MPI-Redistributables-TPN.txt
+  license_file: LICENSE.txt
   summary: Microsoft message-passing-interface (MS-MPI)
   description: |
     Microsoft MPI (MS-MPI) is a Microsoft implementation of the Message Passing
@@ -99,4 +90,4 @@ about:
 extra:
   recipe-maintainers:
     - RyanMcCarthy-NOAA
-    - leofang
+    - isuruf

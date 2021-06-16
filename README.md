@@ -144,5 +144,5 @@ Feedstock Maintainers
 =====================
 
 * [@RyanMcCarthy-NOAA](https://github.com/RyanMcCarthy-NOAA/)
-* [@leofang](https://github.com/leofang/)
+* [@isuruf](https://github.com/isuruf/)
 
