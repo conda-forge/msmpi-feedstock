@@ -3,7 +3,7 @@ if not "%MSMPI_BIN_CONDA_BACKUP%"=="" (
     set "MSMPI_BIN_CONDA_BACKUP="
 ) else (
     set "MSMPI_BIN="
-}
+)
 
 if not "%MSMPI_INC_CONDA_BACKUP%"=="" (
     set "MSMPI_INC=%MSMPI_INC_CONDA_BACKUP%"
