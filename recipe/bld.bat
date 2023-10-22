@@ -8,6 +8,7 @@ msbuild.exe /p:Platform=%PLATFORM% /p:Configuration=Release
 if errorlevel 1 exit 1
 
 for /r %SRC_DIR%\out\Release-%PLATFORM% %%f in (*.exe) do @copy "%%f" %LIBRARY_BIN%
+for /r %SRC_DIR%\out\Release-%PLATFORM% %%f in (*.dll) do @copy "%%f" %LIBRARY_BIN%
 for /r %SRC_DIR%\out\Release-%PLATFORM% %%f in (*.lib) do @copy "%%f" %LIBRARY_LIB%
 for /r %SRC_DIR%\out\Release-%PLATFORM% %%f in (*.f90) do @copy "%%f" %LIBRARY_INC%
 for /r %SRC_DIR%\out\Release-%PLATFORM% %%f in (*.h) do @copy "%%f" %LIBRARY_INC%
@@ -36,7 +37,7 @@ copy %LIBRARY_INC%\mpif.h include\
 copy %LIBRARY_INC%\mpi.f90 include\
 copy %LIBRARY_INC%\mpifptr.h include\
 
-dlltool -k -d %SRC_DIR%\src\msys2\msmpi.def -l bin\msmpi.dll
+dlltool -k -d %SRC_DIR%\src\msys2\msmpi.def -l lib\libmsmpi.dll.a
 if errorlevel 1 exit 1
 
 set mpic=%SRC_DIR%\src\msys2\mpi.c
