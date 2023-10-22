@@ -6,20 +6,19 @@ package:
   version: {{ version }}
 
 source:
-  url: https://github.com/microsoft/Microsoft-MPI/archive/v{{ version }}.tar.gz
-  sha256: 63c7da941fc4ffb05a0f97bd54a67968c71f63389a0d162d3182eabba1beab3d
-  patches:
-    - conda-build.patch
+  url: https://github.com/nicogodet/Microsoft-MPI/archive/refs/tags/{{ version }}.tar.gz
+  sha256: 5cd0181e16419249e4e5c479cebabf351c4c95d67fa235dc14dcbef5d7e5f1da
 
 build:
-  number: 7
+  number: 8
   skip: true  # [not win]
 
 requirements:
   build:
     - {{ compiler('cxx') }}
     - {{ compiler('c') }}
-    - {{ compiler('m2w64_fortran') }}
+    - m2w64-toolchain        # [win]
+    - m2-perl                # [win]
   run:
     - mpi 1.0 msmpi
 
