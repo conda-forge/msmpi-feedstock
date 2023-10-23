@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://github.com/nicogodet/Microsoft-MPI/archive/refs/tags/{{ version }}.tar.gz
-  sha256: 5cd0181e16419249e4e5c479cebabf351c4c95d67fa235dc14dcbef5d7e5f1da
+  sha256: 4f7ad4ec7b043d26c38d201ea383bdafb3f8e68fe04c0d00a2dcacdafad6a204
 
 build:
   number: 8
