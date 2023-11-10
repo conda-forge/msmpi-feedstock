@@ -24,7 +24,7 @@ if defined MSMPI_LIB32 (
     set "MSMPI_LIB32_CONDA_BACKUP=%MSMPI_LIB32%"
 )
 
-set MSMPI_BIN=%PREFIX%\Library\bin
-set MSMPI_INC=%PREFIX%\Library\include
-set MSMPI_LIB64=%PREFIX%\Library\lib
+set MSMPI_BIN=%PREFIX%\Library\mingw-w64\bin
+set MSMPI_INC=%PREFIX%\Library\mingw-w64\include
+set MSMPI_LIB64=%PREFIX%\Library\mingw-w64\lib
 set MSMPI_LIB32=""
