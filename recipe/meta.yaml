@@ -23,6 +23,7 @@ requirements:
     - {{ compiler('c') }}
     - {{ stdlib("c") }}
     - {{ compiler('m2w64_fortran') }}
+    - gfortran
   run:
     - mpi 1.0 msmpi
 
