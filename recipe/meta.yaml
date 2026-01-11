@@ -14,12 +14,14 @@ source:
 build:
   number: 7
   skip: true  # [not win]
+  run_exports:
+    - {{ pin_subpackage('msmpi', max_pin='x.x.x') }}
 
 requirements:
   build:
     - {{ compiler('cxx') }}
     - {{ compiler('c') }}
-    - {{ compiler('m2w64_fortran') }}
+    - {{ compiler('fortran') }}
   run:
     - mpi 1.0 msmpi
 
