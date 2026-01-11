@@ -1,0 +1,59 @@
+diff --git a/.build/CBT/build.props b/.build/CBT/build.props
+index c809c84..a21dc5e 100644
+--- a/.build/CBT/build.props
++++ b/.build/CBT/build.props
+@@ -70,9 +70,52 @@
+       The most complicated part of this call is how to get an object[] to pass to the ReadAllBytes() method.  MSBuild coerces the arguments to a method but creating a populated object[] with one call is not possible.  By calling
+       System.IO.Directory.GetFiles(), we are returned a string[] which MSBuild coerces to an object[] to ReadAllBytes().  
+     -->
+-    <CBTCoreAssemblyName Condition=" Exists('$(CBTCoreAssemblyPath)') And '$(CBTCoreAssemblyPath.GetType().Assembly.GetType(`System.AppDomain`).GetProperty(`CurrentDomain`).GetValue(null).GetData(`CBT_CORE_ASSEMBLY`))' == '' ">$(CBTCoreAssemblyPath.GetType().Assembly.GetType('System.AppDomain').GetProperty('CurrentDomain').GetValue(null).SetData('CBT_CORE_ASSEMBLY', $(CBTCoreAssemblyPath.GetType().Assembly.GetType('System.AppDomain').GetProperty('CurrentDomain').GetValue(null).Load($(CBTCoreAssemblyPath.GetType().Assembly.GetType('System.IO.File').GetMethod('ReadAllBytes').Invoke(null, $([System.IO.Directory]::GetFiles($([System.IO.Path]::GetDirectoryName($(CBTCoreAssemblyPath))), $([System.IO.Path]::GetFileName($(CBTCoreAssemblyPath)))))))))))</CBTCoreAssemblyName> 
+-    <CBTCoreAssemblyName>$(CBTCoreAssemblyPath.GetType().Assembly.GetType('System.AppDomain').GetProperty('CurrentDomain').GetValue(null).GetData('CBT_CORE_ASSEMBLY'))</CBTCoreAssemblyName> 
+-    <CBTModulesRestored Condition=" '$(RestoreCBTModules)' != 'false' And '$(BuildingInsideVisualStudio)' != 'true' And '$(CBTModulesRestored)' != 'true' And '$(CBTCoreAssemblyName)' != '' ">$(CBTCoreAssemblyPath.GetType().Assembly.GetType('System.AppDomain').GetProperty('CurrentDomain').GetValue(null).GetData('CBT_CORE_ASSEMBLY').CreateInstance($(CBTModuleRestoreTaskName)).Execute($(CBTModuleImportsAfter.Split(';')), $(CBTModuleImportsBefore.Split(';')), $(CBTModuleExtensionsPath), $(CBTModulePropertiesFile), $(CBTNuGetDownloaderAssemblyPath), $(CBTNuGetDownloaderClassName), '$(CBTNuGetDownloaderArguments)', $(CBTModuleRestoreInputs.Split(';')), $(CBTModulePackageConfigPath), $(CBTModuleRestoreCommand), $(CBTModuleRestoreCommandArguments), $(MSBuildProjectFullPath), $(MSBuildBinPath)))</CBTModulesRestored>
++    <!-- If CBTCoreAssemblyPath exists and CBT_CORE_ASSEMBLY isn't set, load the assembly bytes and stash it in the AppDomain -->
++    <CBTCoreAssemblyName
++      Condition="Exists('$(CBTCoreAssemblyPath)') and
++                '$([System.AppDomain]::CurrentDomain.GetData('CBT_CORE_ASSEMBLY'))' == ''">
++      $([System.AppDomain]::CurrentDomain.SetData(
++          'CBT_CORE_ASSEMBLY',
++          $([System.Reflection.Assembly]::Load(
++              $([System.IO.File]::ReadAllBytes(
++                  $([System.IO.Directory]::GetFiles(
++                      $([System.IO.Path]::GetDirectoryName('$(CBTCoreAssemblyPath)')),
++                      $([System.IO.Path]::GetFileName('$(CBTCoreAssemblyPath)'))
++                  ))
++              ))
++          ))
++      ))
++    </CBTCoreAssemblyName>
++
++    <!-- Always read back what we stored -->
++    <CBTCoreAssemblyName>
++      $([System.AppDomain]::CurrentDomain.GetData('CBT_CORE_ASSEMBLY'))
++    </CBTCoreAssemblyName>
++
++    <!-- Use the cached assembly to create/execute the restore task -->
++    <CBTModulesRestored
++      Condition="'$(RestoreCBTModules)' != 'false' and
++                '$(BuildingInsideVisualStudio)' != 'true' and
++                '$(CBTModulesRestored)' != 'true' and
++                '$(CBTCoreAssemblyName)' != ''">
++      $([System.AppDomain]::CurrentDomain.GetData('CBT_CORE_ASSEMBLY')
++          .CreateInstance('$(CBTModuleRestoreTaskName)')
++          .Execute(
++              $(CBTModuleImportsAfter.Split(';')),
++              $(CBTModuleImportsBefore.Split(';')),
++              '$(CBTModuleExtensionsPath)',
++              '$(CBTModulePropertiesFile)',
++              '$(CBTNuGetDownloaderAssemblyPath)',
++              '$(CBTNuGetDownloaderClassName)',
++              '$(CBTNuGetDownloaderArguments)',
++              $(CBTModuleRestoreInputs.Split(';')),
++              '$(CBTModulePackageConfigPath)',
++              '$(CBTModuleRestoreCommand)',
++              '$(CBTModuleRestoreCommandArguments)',
++              '$(MSBuildProjectFullPath)',
++              '$(MSBuildBinPath)'
++          ))
++    </CBTModulesRestored>
+ 
+   </PropertyGroup>
