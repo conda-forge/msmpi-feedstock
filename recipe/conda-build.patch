@@ -214,6 +214,18 @@ index d92d7fd..7aed4c1 100644
  
 -  <Import Project="$(TraversalTargets)" Condition=" '$(CBTModulesRestored)' == 'true' " />
  </Project>
+diff --git a/src/mpi/msmpi/fortran/lib/mpifort.vcxproj b/src/mpi/msmpi/fortran/lib/mpifort.vcxproj
+index 24bd29d..d1d231b 100644
+--- a/src/mpi/msmpi/fortran/lib/mpifort.vcxproj
++++ b/src/mpi/msmpi/fortran/lib/mpifort.vcxproj
+@@ -13,6 +13,7 @@
+     <PropertyGroup Condition="'$(BuildArchitecture)'=='amd64'">
+       <Fort_Flags>-fno-underscoring -D_WIN64 -D_AMD64_ -DAMD64</Fort_Flags>
+     </PropertyGroup>
++    <MakeDir Directories="$(O)" />
+     <Exec Command="$(GFORTRAN_BIN)\gfortran.exe -I$(MPI_INC_ROOT) -c %(ForCompile.Identity) $(Fort_Flags)  -o $(O)\%(ForCompile.FileName).obj" />
+     <ItemGroup>
+       <Lib Condition="'$(ConfigurationType)'=='StaticLibrary'" Include="@(ForCompile->'$(O)\%(Filename).obj')" />
 diff --git a/src/mpi/pmilib/dirs.proj b/src/mpi/pmilib/dirs.proj
 index a9c9a8a..1e64c65 100644
 --- a/src/mpi/pmilib/dirs.proj
