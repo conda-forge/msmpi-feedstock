@@ -85,7 +85,7 @@ index b53afb1..f7af391 100644
 -  <Import Project="$(TraversalTargets)" Condition=" '$(CBTModulesRestored)' == 'true' " />
  </Project>
 diff --git a/src/launchSvc/msmpiLaunchSvcMc.vcxproj b/src/launchSvc/msmpiLaunchSvcMc.vcxproj
-index 2a6952b..2d510ec 100644
+index 2a6952b..00aa1b7 100644
 --- a/src/launchSvc/msmpiLaunchSvcMc.vcxproj
 +++ b/src/launchSvc/msmpiLaunchSvcMc.vcxproj
 @@ -11,16 +11,12 @@
@@ -104,7 +104,7 @@ index 2a6952b..2d510ec 100644
 -      <RCFilePath>$(SrcRoot)\launchsvc\$(O)</RCFilePath>
 -    </MessageCompile>
 -  </ItemGroup>
-+  <Target Name="CompileMessages" AfterTargets="Build">
++  <Target Name="CompileMessages" BeforeTargets="FinalizeBuildStatus">
 +    <MakeDir Directories="$(SrcRoot)\launchsvc\$(O)" />
 +    <Exec Command="mc.exe -h $(SrcRoot)\launchsvc\$(O) -r $(SrcRoot)\launchsvc\$(O) launchsvcmsg.mc" />
 +  </Target>
@@ -124,7 +124,7 @@ index a3f7e70..469bef9 100644
            IgnoreExitCode="true"
            Command="perl $(MPI_SRC_ROOT)\common\extracterrmsgs -skip=$(FileToSkip) -outpath=$(O) -outfile=defmsg.h -testfile=errtest.c @(DirectoriesToParse,' ')"/>
 diff --git a/src/mpi/common/traceManifest.vcxproj b/src/mpi/common/traceManifest.vcxproj
-index f80e80b..ed40464 100644
+index f80e80b..717bc8d 100644
 --- a/src/mpi/common/traceManifest.vcxproj
 +++ b/src/mpi/common/traceManifest.vcxproj
 @@ -8,23 +8,14 @@
@@ -150,9 +150,9 @@ index f80e80b..ed40464 100644
 -      <RemoveCharsFromSymbolName>EVENT_</RemoveCharsFromSymbolName>
 -    </MessageCompile>
 -  </ItemGroup>
-+  <Target Name="CompileMessages" AfterTargets="Build">
++  <Target Name="CompileMessages" BeforeTargets="FinalizeBuildStatus">
 +    <MakeDir Directories="$(MPI_SRC_ROOT)\common\$(O)" />
-+    <Exec Command="mc.exe -um -p Trace -r EVENT_ -h $(MPI_SRC_ROOT)\common\$(O) -r $(MPI_SRC_ROOT)\common\$(O) -z MpiTraceEvents $(MPI_SRC_ROOT)\common\mpitrace.man" />
++    <Exec Command="mc.exe -um -p Trace -P EVENT_ -h $(MPI_SRC_ROOT)\common\$(O) -r $(MPI_SRC_ROOT)\common\$(O) -z MpiTraceEvents $(MPI_SRC_ROOT)\common\mpitrace.man" />
 +  </Target>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
  </Project>
