@@ -85,6 +85,32 @@ index b53afb1..f7af391 100644
    </ItemGroup>
 -  <Import Project="$(TraversalTargets)" Condition=" '$(CBTModulesRestored)' == 'true' " />
  </Project>
+diff --git a/src/launchSvc/msmpiLaunchSvcMc.vcxproj b/src/launchSvc/msmpiLaunchSvcMc.vcxproj
+index 2a6952b..9318c86 100644
+--- a/src/launchSvc/msmpiLaunchSvcMc.vcxproj
++++ b/src/launchSvc/msmpiLaunchSvcMc.vcxproj
+@@ -11,7 +11,7 @@
+   <PropertyGroup Label="Configuration">
+     <ConfigurationType>None</ConfigurationType>
+     <UseDebugLibraries>false</UseDebugLibraries>
+-    <PlatformToolset>WindowsUserModeDriver10.0</PlatformToolset>
++    <PlatformToolset>v143</PlatformToolset>
+   </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+   <ItemGroup>
+diff --git a/src/mpi/common/traceManifest.vcxproj b/src/mpi/common/traceManifest.vcxproj
+index f80e80b..ec75ce6 100644
+--- a/src/mpi/common/traceManifest.vcxproj
++++ b/src/mpi/common/traceManifest.vcxproj
+@@ -8,7 +8,7 @@
+   <PropertyGroup Label="Configuration">
+     <UseDebugLibraries>false</UseDebugLibraries>
+     <ConfigurationType>None</ConfigurationType>
+-    <PlatformToolset>WindowsUserModeDriver10.0</PlatformToolset>
++    <PlatformToolset>v143</PlatformToolset>
+     <IntDirSharingDetected>None</IntDirSharingDetected>
+   </PropertyGroup>
+ 
 diff --git a/src/mpi/dirs.proj b/src/mpi/dirs.proj
 index d8e9358..dfaeabf 100644
 --- a/src/mpi/dirs.proj
