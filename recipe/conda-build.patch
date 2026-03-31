@@ -1,5 +1,5 @@
 diff --git a/Directory.Build.props b/Directory.Build.props
-index 3177de8..c6ec443 100644
+index 3177de8..2162e06 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
 @@ -56,8 +56,6 @@
@@ -11,7 +11,7 @@ index 3177de8..c6ec443 100644
    <!--
      The NuProjPath property allows .nuproj projects to build without having NuProj installed.
    -->
-@@ -109,14 +107,12 @@
+@@ -109,14 +107,11 @@
    </PropertyGroup>
  
    <PropertyGroup>
@@ -24,40 +24,30 @@ index 3177de8..c6ec443 100644
 -    <VCToolsVersion>14.15.26726</VCToolsVersion>
 -    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
 -    <PlatformToolset>v141</PlatformToolset>
-+    <PlatformToolset>v143</PlatformToolset>
      <OutDir>$(OutputPath)</OutDir>
      <O>$(Platform)\$(Configuration)</O>
      <O Condition="'$(Platform)' == 'x86'">$(Configuration)</O>
 diff --git a/NuGet.Config b/NuGet.Config
-index 2d7d099..fc96b1d 100644
+index 2d7d099..f175957 100644
 --- a/NuGet.Config
 +++ b/NuGet.Config
-@@ -5,14 +5,12 @@
-   </config>
-   <packageRestore>
-     <add key="enabled" value="true" />
--    <add key="automatic" value="true" />
-   </packageRestore>
-   <activePackageSource>
-     <add key="All" value="(Aggregate source)" />
+@@ -12,7 +12,6 @@
    </activePackageSource>
    <packageSources>
      <clear />
 -    <add key="CBT" value="https://www.myget.org/F/cbt/api/v3/index.json" />
--    <add key="NuGet.org" value="https://api.nuget.org/v3/index.json" />
-+    <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
+     <add key="NuGet.org" value="https://api.nuget.org/v3/index.json" />
    </packageSources>
  </configuration>
 diff --git a/dirs.proj b/dirs.proj
-index ba6a006..052a43f 100644
+index ba6a006..8387e1c 100644
 --- a/dirs.proj
 +++ b/dirs.proj
-@@ -1,9 +1,7 @@
+@@ -1,9 +1,6 @@
  <?xml version="1.0" encoding="utf-8"?>
 -<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 -  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
 +<Project Sdk="Microsoft.Build.Traversal/4.1.82" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-+
    <ItemGroup>
      <ProjectFile Include="$(MSBuildThisFileDirectory)src\dirs.proj" />
    </ItemGroup>
@@ -66,34 +56,32 @@ index ba6a006..052a43f 100644
  </Project>
 \ No newline at end of file
 diff --git a/src/dirs.proj b/src/dirs.proj
-index b53afb1..f7af391 100644
+index b53afb1..c3308ed 100644
 --- a/src/dirs.proj
 +++ b/src/dirs.proj
-@@ -1,6 +1,6 @@
+@@ -1,12 +1,9 @@
  <?xml version="1.0" encoding="utf-8"?>
 -<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 -  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+-
 +<Project Sdk="Microsoft.Build.Traversal/4.1.82" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-+
- 
    <ItemGroup>
      <ProjectFile Include="$(MSBuildThisFileDirectory)include\binplace.proj"/>
-@@ -8,5 +8,4 @@
+     <ProjectFile Include="$(MSBuildThisFileDirectory)launchSvc\msmpiLaunchSvc.vcxproj"/>
      <ProjectFile Include="$(MSBuildThisFileDirectory)launchSvc\msmpiLaunchSvcMc.vcxproj"/>
      <ProjectFile Include="$(MSBuildThisFileDirectory)mpi\dirs.proj"/>
    </ItemGroup>
 -  <Import Project="$(TraversalTargets)" Condition=" '$(CBTModulesRestored)' == 'true' " />
  </Project>
 diff --git a/src/launchSvc/msmpiLaunchSvcMc.vcxproj b/src/launchSvc/msmpiLaunchSvcMc.vcxproj
-index 2a6952b..00aa1b7 100644
+index 2a6952b..f42fc7a 100644
 --- a/src/launchSvc/msmpiLaunchSvcMc.vcxproj
 +++ b/src/launchSvc/msmpiLaunchSvcMc.vcxproj
-@@ -11,16 +11,12 @@
+@@ -11,16 +11,11 @@
    <PropertyGroup Label="Configuration">
      <ConfigurationType>None</ConfigurationType>
      <UseDebugLibraries>false</UseDebugLibraries>
 -    <PlatformToolset>WindowsUserModeDriver10.0</PlatformToolset>
-+    <PlatformToolset>v143</PlatformToolset>
    </PropertyGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
 -  <ItemGroup>
@@ -124,15 +112,14 @@ index a3f7e70..469bef9 100644
            IgnoreExitCode="true"
            Command="perl $(MPI_SRC_ROOT)\common\extracterrmsgs -skip=$(FileToSkip) -outpath=$(O) -outfile=defmsg.h -testfile=errtest.c @(DirectoriesToParse,' ')"/>
 diff --git a/src/mpi/common/traceManifest.vcxproj b/src/mpi/common/traceManifest.vcxproj
-index f80e80b..717bc8d 100644
+index f80e80b..47b7336 100644
 --- a/src/mpi/common/traceManifest.vcxproj
 +++ b/src/mpi/common/traceManifest.vcxproj
-@@ -8,23 +8,14 @@
+@@ -8,23 +8,13 @@
    <PropertyGroup Label="Configuration">
      <UseDebugLibraries>false</UseDebugLibraries>
      <ConfigurationType>None</ConfigurationType>
 -    <PlatformToolset>WindowsUserModeDriver10.0</PlatformToolset>
-+    <PlatformToolset>v143</PlatformToolset>
      <IntDirSharingDetected>None</IntDirSharingDetected>
    </PropertyGroup>
  
@@ -158,19 +145,19 @@ index f80e80b..717bc8d 100644
  </Project>
 \ No newline at end of file
 diff --git a/src/mpi/dirs.proj b/src/mpi/dirs.proj
-index d8e9358..dfaeabf 100644
+index d8e9358..0f8cfa6 100644
 --- a/src/mpi/dirs.proj
 +++ b/src/mpi/dirs.proj
-@@ -1,6 +1,6 @@
+@@ -1,7 +1,5 @@
  <?xml version="1.0" encoding="utf-8"?>
 -<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 -  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+-
 +<Project Sdk="Microsoft.Build.Traversal/4.1.82" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-+
- 
    <ItemGroup>
      <ProjectFile Include="$(MSBuildThisFileDirectory)common\mpicommon.vcxproj" />
-@@ -12,5 +12,4 @@
+     <ProjectFile Include="$(MSBuildThisFileDirectory)common\traceManifest.vcxproj" />
+@@ -12,5 +10,4 @@
      <ProjectFile Include="$(MSBuildThisFileDirectory)stub\mpistub.vcxproj" />
    </ItemGroup>
  
