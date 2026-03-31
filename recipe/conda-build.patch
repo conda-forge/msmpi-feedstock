@@ -85,10 +85,10 @@ index b53afb1..f7af391 100644
 -  <Import Project="$(TraversalTargets)" Condition=" '$(CBTModulesRestored)' == 'true' " />
  </Project>
 diff --git a/src/launchSvc/msmpiLaunchSvcMc.vcxproj b/src/launchSvc/msmpiLaunchSvcMc.vcxproj
-index 2a6952b..9318c86 100644
+index 2a6952b..2d510ec 100644
 --- a/src/launchSvc/msmpiLaunchSvcMc.vcxproj
 +++ b/src/launchSvc/msmpiLaunchSvcMc.vcxproj
-@@ -11,7 +11,7 @@
+@@ -11,16 +11,12 @@
    <PropertyGroup Label="Configuration">
      <ConfigurationType>None</ConfigurationType>
      <UseDebugLibraries>false</UseDebugLibraries>
@@ -96,12 +96,38 @@ index 2a6952b..9318c86 100644
 +    <PlatformToolset>v143</PlatformToolset>
    </PropertyGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-   <ItemGroup>
+-  <ItemGroup>
+-    <MessageCompile Include="launchsvcmsg.mc">
+-      <GeneratedHeaderPath>true</GeneratedHeaderPath>
+-      <HeaderFilePath>$(SrcRoot)\launchsvc\$(O)</HeaderFilePath>
+-      <GeneratedRCAndMessagesPath>true</GeneratedRCAndMessagesPath>
+-      <RCFilePath>$(SrcRoot)\launchsvc\$(O)</RCFilePath>
+-    </MessageCompile>
+-  </ItemGroup>
++  <Target Name="CompileMessages" AfterTargets="Build">
++    <MakeDir Directories="$(SrcRoot)\launchsvc\$(O)" />
++    <Exec Command="mc.exe -h $(SrcRoot)\launchsvc\$(O) -r $(SrcRoot)\launchsvc\$(O) launchsvcmsg.mc" />
++  </Target>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+ </Project>
+\ No newline at end of file
+diff --git a/src/mpi/common/mpicommon.vcxproj b/src/mpi/common/mpicommon.vcxproj
+index a3f7e70..469bef9 100644
+--- a/src/mpi/common/mpicommon.vcxproj
++++ b/src/mpi/common/mpicommon.vcxproj
+@@ -89,6 +89,7 @@ if not %rc%==1 exit %rce% else exit 0</Command>
+       <DirectoriesToParse Include="$(MPI_SRC_ROOT)\smpd"/>
+       <DirectoriesToParse Include="$(SrcRoot)\launchSvc"/>
+     </ItemGroup>
++    <MakeDir Directories="$(O)" />
+     <Exec ConsoleToMsBuild="true"
+           IgnoreExitCode="true"
+           Command="perl $(MPI_SRC_ROOT)\common\extracterrmsgs -skip=$(FileToSkip) -outpath=$(O) -outfile=defmsg.h -testfile=errtest.c @(DirectoriesToParse,' ')"/>
 diff --git a/src/mpi/common/traceManifest.vcxproj b/src/mpi/common/traceManifest.vcxproj
-index f80e80b..ec75ce6 100644
+index f80e80b..ed40464 100644
 --- a/src/mpi/common/traceManifest.vcxproj
 +++ b/src/mpi/common/traceManifest.vcxproj
-@@ -8,7 +8,7 @@
+@@ -8,23 +8,14 @@
    <PropertyGroup Label="Configuration">
      <UseDebugLibraries>false</UseDebugLibraries>
      <ConfigurationType>None</ConfigurationType>
@@ -110,6 +136,27 @@ index f80e80b..ec75ce6 100644
      <IntDirSharingDetected>None</IntDirSharingDetected>
    </PropertyGroup>
  
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+-
+-  <ItemGroup>
+-    <MessageCompile Include="$(MPI_SRC_ROOT)\common\mpitrace.man">
+-      <GeneratedHeaderPath>true</GeneratedHeaderPath>
+-      <HeaderFilePath>$(MPI_SRC_ROOT)\common\$(O)</HeaderFilePath>
+-      <GeneratedRCAndMessagesPath>true</GeneratedRCAndMessagesPath>
+-      <RCFilePath>$(MPI_SRC_ROOT)\common\$(O)</RCFilePath>
+-      <GeneratedFilesBaseName>MpiTraceEvents</GeneratedFilesBaseName>
+-      <GenerateUserModeLoggingMacros>true</GenerateUserModeLoggingMacros>
+-      <PrefixMacroName>Trace</PrefixMacroName>
+-      <RemoveCharsFromSymbolName>EVENT_</RemoveCharsFromSymbolName>
+-    </MessageCompile>
+-  </ItemGroup>
++  <Target Name="CompileMessages" AfterTargets="Build">
++    <MakeDir Directories="$(MPI_SRC_ROOT)\common\$(O)" />
++    <Exec Command="mc.exe -um -p Trace -r EVENT_ -h $(MPI_SRC_ROOT)\common\$(O) -r $(MPI_SRC_ROOT)\common\$(O) -z MpiTraceEvents $(MPI_SRC_ROOT)\common\mpitrace.man" />
++  </Target>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+ </Project>
+\ No newline at end of file
 diff --git a/src/mpi/dirs.proj b/src/mpi/dirs.proj
 index d8e9358..dfaeabf 100644
 --- a/src/mpi/dirs.proj
