@@ -214,6 +214,18 @@ index d92d7fd..7aed4c1 100644
  
 -  <Import Project="$(TraversalTargets)" Condition=" '$(CBTModulesRestored)' == 'true' " />
  </Project>
+diff --git a/src/mpi/msmpi/fortran/fortran.props b/src/mpi/msmpi/fortran/fortran.props
+index 12beefc..915c3de 100644
+--- a/src/mpi/msmpi/fortran/fortran.props
++++ b/src/mpi/msmpi/fortran/fortran.props
+@@ -25,6 +25,7 @@
+           BeforeTargets="ClCompile"
+           Inputs="..\$(BuildArchitecture).$(CallingConvention).alias"
+           Outputs="$(O)\$(BuildArchitecture).$(CallingConvention).obj">
++    <MakeDir Directories="$(O)" />
+     <Exec ConsoleToMsBuild="true" IgnoreExitCode="true" Command="cmd /c echo //empty file >$(O)\$(BuildArchitecture).$(CallingConvention).c"/>
+     <!-- Call CL.exe directly without flags so that aliasobj is able to process the .obj file. -->
+     <Exec ConsoleToMsBuild="true" IgnoreExitCode="true" Command="cmd /c $(CL_Exe) /Fo$(O)\$(BuildArchitecture).$(CallingConvention).obj -c $(O)\$(BuildArchitecture).$(CallingConvention).c"/>
 diff --git a/src/mpi/msmpi/fortran/lib/mpifort.vcxproj b/src/mpi/msmpi/fortran/lib/mpifort.vcxproj
 index 24bd29d..d1d231b 100644
 --- a/src/mpi/msmpi/fortran/lib/mpifort.vcxproj
