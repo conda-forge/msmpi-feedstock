@@ -5,7 +5,7 @@ if "%ARCH%"=="32" (
 )
 
 set MSBUILDENABLEALLPROPERTYFUNCTIONS=1
-msbuild.exe /p:Platform=%PLATFORM% /p:Configuration=Release
+msbuild.exe /restore /p:Platform=%PLATFORM% /p:Configuration=Release
 if errorlevel 1 exit 1
 
 for /r %SRC_DIR%\out\Release-%PLATFORM% %%f in (*.exe) do @copy "%%f" %LIBRARY_BIN%
