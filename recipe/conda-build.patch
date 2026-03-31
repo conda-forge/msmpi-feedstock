@@ -74,32 +74,6 @@ index b53afb1..c3308ed 100644
    </ItemGroup>
 -  <Import Project="$(TraversalTargets)" Condition=" '$(CBTModulesRestored)' == 'true' " />
  </Project>
-diff --git a/src/launchSvc/msmpiLaunchSvcMc.vcxproj b/src/launchSvc/msmpiLaunchSvcMc.vcxproj
-index 2a6952b..f42fc7a 100644
---- a/src/launchSvc/msmpiLaunchSvcMc.vcxproj
-+++ b/src/launchSvc/msmpiLaunchSvcMc.vcxproj
-@@ -11,16 +11,11 @@
-   <PropertyGroup Label="Configuration">
-     <ConfigurationType>None</ConfigurationType>
-     <UseDebugLibraries>false</UseDebugLibraries>
--    <PlatformToolset>WindowsUserModeDriver10.0</PlatformToolset>
-   </PropertyGroup>
-   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
--  <ItemGroup>
--    <MessageCompile Include="launchsvcmsg.mc">
--      <GeneratedHeaderPath>true</GeneratedHeaderPath>
--      <HeaderFilePath>$(SrcRoot)\launchsvc\$(O)</HeaderFilePath>
--      <GeneratedRCAndMessagesPath>true</GeneratedRCAndMessagesPath>
--      <RCFilePath>$(SrcRoot)\launchsvc\$(O)</RCFilePath>
--    </MessageCompile>
--  </ItemGroup>
-+  <Target Name="CompileMessages" BeforeTargets="FinalizeBuildStatus">
-+    <MakeDir Directories="$(SrcRoot)\launchsvc\$(O)" />
-+    <Exec Command="mc.exe -h $(SrcRoot)\launchsvc\$(O) -r $(SrcRoot)\launchsvc\$(O) launchsvcmsg.mc" />
-+  </Target>
-   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
- </Project>
-\ No newline at end of file
 diff --git a/src/mpi/common/mpicommon.vcxproj b/src/mpi/common/mpicommon.vcxproj
 index a3f7e70..469bef9 100644
 --- a/src/mpi/common/mpicommon.vcxproj
@@ -112,39 +86,6 @@ index a3f7e70..469bef9 100644
      <Exec ConsoleToMsBuild="true"
            IgnoreExitCode="true"
            Command="perl $(MPI_SRC_ROOT)\common\extracterrmsgs -skip=$(FileToSkip) -outpath=$(O) -outfile=defmsg.h -testfile=errtest.c @(DirectoriesToParse,' ')"/>
-diff --git a/src/mpi/common/traceManifest.vcxproj b/src/mpi/common/traceManifest.vcxproj
-index f80e80b..47b7336 100644
---- a/src/mpi/common/traceManifest.vcxproj
-+++ b/src/mpi/common/traceManifest.vcxproj
-@@ -8,23 +8,13 @@
-   <PropertyGroup Label="Configuration">
-     <UseDebugLibraries>false</UseDebugLibraries>
-     <ConfigurationType>None</ConfigurationType>
--    <PlatformToolset>WindowsUserModeDriver10.0</PlatformToolset>
-     <IntDirSharingDetected>None</IntDirSharingDetected>
-   </PropertyGroup>
- 
-   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
--
--  <ItemGroup>
--    <MessageCompile Include="$(MPI_SRC_ROOT)\common\mpitrace.man">
--      <GeneratedHeaderPath>true</GeneratedHeaderPath>
--      <HeaderFilePath>$(MPI_SRC_ROOT)\common\$(O)</HeaderFilePath>
--      <GeneratedRCAndMessagesPath>true</GeneratedRCAndMessagesPath>
--      <RCFilePath>$(MPI_SRC_ROOT)\common\$(O)</RCFilePath>
--      <GeneratedFilesBaseName>MpiTraceEvents</GeneratedFilesBaseName>
--      <GenerateUserModeLoggingMacros>true</GenerateUserModeLoggingMacros>
--      <PrefixMacroName>Trace</PrefixMacroName>
--      <RemoveCharsFromSymbolName>EVENT_</RemoveCharsFromSymbolName>
--    </MessageCompile>
--  </ItemGroup>
-+  <Target Name="CompileMessages" BeforeTargets="FinalizeBuildStatus">
-+    <MakeDir Directories="$(MPI_SRC_ROOT)\common\$(O)" />
-+    <Exec Command="mc.exe -um -p Trace -P EVENT_ -h $(MPI_SRC_ROOT)\common\$(O) -r $(MPI_SRC_ROOT)\common\$(O) -z MpiTraceEvents $(MPI_SRC_ROOT)\common\mpitrace.man" />
-+  </Target>
-   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
- </Project>
-\ No newline at end of file
 diff --git a/src/mpi/dirs.proj b/src/mpi/dirs.proj
 index d8e9358..0f8cfa6 100644
 --- a/src/mpi/dirs.proj
