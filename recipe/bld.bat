@@ -4,7 +4,7 @@ if "%ARCH%"=="32" (
     set PLATFORM=x64
 )
 
-msbuild.exe /p:Platform=%PLATFORM% /p:Configuration=Release
+msbuild.exe /restore /p:Platform=%PLATFORM% /p:Configuration=Release
 
 for /r %SRC_DIR%\out\Release-%PLATFORM% %%f in (*.exe) do @copy "%%f" %LIBRARY_BIN%
 for /r %SRC_DIR%\out\Release-%PLATFORM% %%f in (*.dll) do @copy "%%f" %LIBRARY_BIN%

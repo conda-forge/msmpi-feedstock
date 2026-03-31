@@ -1,19 +1,188 @@
 diff --git a/Directory.Build.props b/Directory.Build.props
-index 3177de8..d8a6dc0 100644
+index 3177de8..c6ec443 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
-@@ -109,12 +109,12 @@
+@@ -56,8 +56,6 @@
+     properties before or after it depending on what you're injecting.  The "global" build.props will also import
+     files located in the $(CBTLocalPath) folder at certain points.
+   -->
+-  <Import Project="$(EnlistmentRoot)\.build\CBT\build.props" />
+-  
+   <!--
+     The NuProjPath property allows .nuproj projects to build without having NuProj installed.
+   -->
+@@ -109,14 +107,12 @@
    </PropertyGroup>
  
    <PropertyGroup>
 -    <GFORTRAN_BIN>"C:\Program Files\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\bin"</GFORTRAN_BIN>
-+    <GFORTRAN_BIN>$(BUILD_PREFIX)\Library\mingw-w64\bin</GFORTRAN_BIN>
++    <GFORTRAN_BIN>$(BUILD_PREFIX)\Library\bin</GFORTRAN_BIN>
    </PropertyGroup>
  
    <PropertyGroup>
      <OutputPath>$(StagingOutputRootPath)$(MSBuildProjectName)\</OutputPath>
 -    <VCToolsVersion>14.15.26726</VCToolsVersion>
-+    <VCToolsVersion>14.16.27023</VCToolsVersion>
-     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
-     <PlatformToolset>v141</PlatformToolset>
+-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+-    <PlatformToolset>v141</PlatformToolset>
++    <PlatformToolset>v143</PlatformToolset>
      <OutDir>$(OutputPath)</OutDir>
+     <O>$(Platform)\$(Configuration)</O>
+     <O Condition="'$(Platform)' == 'x86'">$(Configuration)</O>
+diff --git a/NuGet.Config b/NuGet.Config
+index 2d7d099..f175957 100644
+--- a/NuGet.Config
++++ b/NuGet.Config
+@@ -12,7 +12,6 @@
+   </activePackageSource>
+   <packageSources>
+     <clear />
+-    <add key="CBT" value="https://www.myget.org/F/cbt/api/v3/index.json" />
+     <add key="NuGet.org" value="https://api.nuget.org/v3/index.json" />
+   </packageSources>
+ </configuration>
+diff --git a/dirs.proj b/dirs.proj
+index ba6a006..8387e1c 100644
+--- a/dirs.proj
++++ b/dirs.proj
+@@ -1,9 +1,6 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
++<Project Sdk="Microsoft.Build.Traversal/4.1.82" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <ItemGroup>
+     <ProjectFile Include="$(MSBuildThisFileDirectory)src\dirs.proj" />
+   </ItemGroup>
+-  <Import Project="$(TraversalTargets)" Condition=" '$(CBTModulesRestored)' == 'true' " />
+-
+ </Project>
+\ No newline at end of file
+diff --git a/src/dirs.proj b/src/dirs.proj
+index b53afb1..c3308ed 100644
+--- a/src/dirs.proj
++++ b/src/dirs.proj
+@@ -1,12 +1,9 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+-
++<Project Sdk="Microsoft.Build.Traversal/4.1.82" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <ItemGroup>
+     <ProjectFile Include="$(MSBuildThisFileDirectory)include\binplace.proj"/>
+     <ProjectFile Include="$(MSBuildThisFileDirectory)launchSvc\msmpiLaunchSvc.vcxproj"/>
+     <ProjectFile Include="$(MSBuildThisFileDirectory)launchSvc\msmpiLaunchSvcMc.vcxproj"/>
+     <ProjectFile Include="$(MSBuildThisFileDirectory)mpi\dirs.proj"/>
+   </ItemGroup>
+-  <Import Project="$(TraversalTargets)" Condition=" '$(CBTModulesRestored)' == 'true' " />
+ </Project>
+diff --git a/src/mpi/common/mpicommon.vcxproj b/src/mpi/common/mpicommon.vcxproj
+index a3f7e70..469bef9 100644
+--- a/src/mpi/common/mpicommon.vcxproj
++++ b/src/mpi/common/mpicommon.vcxproj
+@@ -89,6 +89,7 @@ if not %rc%==1 exit %rce% else exit 0</Command>
+       <DirectoriesToParse Include="$(MPI_SRC_ROOT)\smpd"/>
+       <DirectoriesToParse Include="$(SrcRoot)\launchSvc"/>
+     </ItemGroup>
++    <MakeDir Directories="$(O)" />
+     <Exec ConsoleToMsBuild="true"
+           IgnoreExitCode="true"
+           Command="perl $(MPI_SRC_ROOT)\common\extracterrmsgs -skip=$(FileToSkip) -outpath=$(O) -outfile=defmsg.h -testfile=errtest.c @(DirectoriesToParse,' ')"/>
+diff --git a/src/mpi/dirs.proj b/src/mpi/dirs.proj
+index d8e9358..0f8cfa6 100644
+--- a/src/mpi/dirs.proj
++++ b/src/mpi/dirs.proj
+@@ -1,7 +1,5 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+-
++<Project Sdk="Microsoft.Build.Traversal/4.1.82" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <ItemGroup>
+     <ProjectFile Include="$(MSBuildThisFileDirectory)common\mpicommon.vcxproj" />
+     <ProjectFile Include="$(MSBuildThisFileDirectory)common\traceManifest.vcxproj" />
+@@ -12,5 +10,4 @@
+     <ProjectFile Include="$(MSBuildThisFileDirectory)stub\mpistub.vcxproj" />
+   </ItemGroup>
+ 
+-  <Import Project="$(TraversalTargets)" Condition=" '$(CBTModulesRestored)' == 'true' " />
+ </Project>
+diff --git a/src/mpi/msmpi/dirs.proj b/src/mpi/msmpi/dirs.proj
+index 9959160..0a76d8b 100644
+--- a/src/mpi/msmpi/dirs.proj
++++ b/src/mpi/msmpi/dirs.proj
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
++<Project Sdk="Microsoft.Build.Traversal/4.1.82" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
++
+   <Import Project="$(SrcRoot)\mpi.props" />
+ 
+   <ItemGroup>
+@@ -14,5 +14,4 @@
+     <ProjectFile Include="$(MSBuildThisFileDirectory)util\mpiutil.vcxproj" />
+   </ItemGroup>
+ 
+-  <Import Project="$(TraversalTargets)" Condition=" '$(CBTModulesRestored)' == 'true' " />
+ </Project>
+diff --git a/src/mpi/msmpi/fortran/dirs.proj b/src/mpi/msmpi/fortran/dirs.proj
+index d92d7fd..7aed4c1 100644
+--- a/src/mpi/msmpi/fortran/dirs.proj
++++ b/src/mpi/msmpi/fortran/dirs.proj
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
++<Project Sdk="Microsoft.Build.Traversal/4.1.82" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
++
+   <Import Project="$(SrcRoot)\mpi.props" />
+ 
+   <ItemGroup>
+@@ -11,5 +11,4 @@
+     <ProjectFile Include="$(MSBuildThisFileDirectory)msmpifms\msmpifms.vcxproj" />
+   </ItemGroup>
+ 
+-  <Import Project="$(TraversalTargets)" Condition=" '$(CBTModulesRestored)' == 'true' " />
+ </Project>
+diff --git a/src/mpi/msmpi/fortran/fortran.props b/src/mpi/msmpi/fortran/fortran.props
+index 12beefc..915c3de 100644
+--- a/src/mpi/msmpi/fortran/fortran.props
++++ b/src/mpi/msmpi/fortran/fortran.props
+@@ -25,6 +25,7 @@
+           BeforeTargets="ClCompile"
+           Inputs="..\$(BuildArchitecture).$(CallingConvention).alias"
+           Outputs="$(O)\$(BuildArchitecture).$(CallingConvention).obj">
++    <MakeDir Directories="$(O)" />
+     <Exec ConsoleToMsBuild="true" IgnoreExitCode="true" Command="cmd /c echo //empty file >$(O)\$(BuildArchitecture).$(CallingConvention).c"/>
+     <!-- Call CL.exe directly without flags so that aliasobj is able to process the .obj file. -->
+     <Exec ConsoleToMsBuild="true" IgnoreExitCode="true" Command="cmd /c $(CL_Exe) /Fo$(O)\$(BuildArchitecture).$(CallingConvention).obj -c $(O)\$(BuildArchitecture).$(CallingConvention).c"/>
+diff --git a/src/mpi/msmpi/fortran/lib/mpifort.vcxproj b/src/mpi/msmpi/fortran/lib/mpifort.vcxproj
+index 24bd29d..d1d231b 100644
+--- a/src/mpi/msmpi/fortran/lib/mpifort.vcxproj
++++ b/src/mpi/msmpi/fortran/lib/mpifort.vcxproj
+@@ -13,6 +13,7 @@
+     <PropertyGroup Condition="'$(BuildArchitecture)'=='amd64'">
+       <Fort_Flags>-fno-underscoring -D_WIN64 -D_AMD64_ -DAMD64</Fort_Flags>
+     </PropertyGroup>
++    <MakeDir Directories="$(O)" />
+     <Exec Command="$(GFORTRAN_BIN)\gfortran.exe -I$(MPI_INC_ROOT) -c %(ForCompile.Identity) $(Fort_Flags)  -o $(O)\%(ForCompile.FileName).obj" />
+     <ItemGroup>
+       <Lib Condition="'$(ConfigurationType)'=='StaticLibrary'" Include="@(ForCompile->'$(O)\%(Filename).obj')" />
+diff --git a/src/mpi/pmilib/dirs.proj b/src/mpi/pmilib/dirs.proj
+index a9c9a8a..1e64c65 100644
+--- a/src/mpi/pmilib/dirs.proj
++++ b/src/mpi/pmilib/dirs.proj
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
++<Project Sdk="Microsoft.Build.Traversal/4.1.82" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
++
+   <Import Project="$(SrcRoot)\mpi.props" />
+ 
+   <ItemGroup>
+@@ -8,5 +8,4 @@
+     <ProjectFile Include="$(MSBuildThisFileDirectory)lib\pmilib.vcxproj" />
+   </ItemGroup>
+ 
+-  <Import Project="$(TraversalTargets)" Condition=" '$(CBTModulesRestored)' == 'true' " />
+ </Project>
