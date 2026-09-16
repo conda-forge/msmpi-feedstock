@@ -24,7 +24,15 @@ if defined MSMPI_LIB32 (
     set "MSMPI_LIB32_CONDA_BACKUP=%MSMPI_LIB32%"
 )
 
-set MSMPI_BIN=%PREFIX%\Library\bin
-set MSMPI_INC=%PREFIX%\Library\include
-set MSMPI_LIB64=%PREFIX%\Library\lib
-set MSMPI_LIB32=""
+if "%CONDA_BUILD%" == "" (
+    REM if not building, use CONDA_PREFIX
+    set MSMPI_BIN=%CONDA_PREFIX%\Library\bin
+    set MSMPI_INC=%CONDA_PREFIX%\Library\include
+    set MSMPI_LIB64=%CONDA_PREFIX%\Library\lib
+    set MSMPI_LIB32=""
+) else (
+    set MSMPI_BIN=%PREFIX%\Library\bin
+    set MSMPI_INC=%PREFIX%\Library\include
+    set MSMPI_LIB64=%PREFIX%\Library\lib
+    set MSMPI_LIB32=""
+)
